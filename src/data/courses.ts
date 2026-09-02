@@ -1,0 +1,1086 @@
+export type CourseType = 'bachelor' | 'foundation' | 'diploma';
+
+export interface Course {
+  id: string;
+  type: CourseType;
+  code: string;
+  department: { zh: string; en: string };
+  name: { zh: string; en: string };
+  mqaNo: string;
+  accreditation: string;
+  duration: { zh: string; en: string };
+  durationYears: number;
+  intakes: string[];
+  tuition: number;
+  language: { zh: string; en: string };
+  description: { zh: string; en: string };
+  subjects: { zh: string[]; en: string[] };
+  entryRequirements: { zh: string[]; en: string[] };
+  careerProspects: { zh: string[]; en: string[] };
+  categories: string[];
+  color: string;
+}
+
+export const courses: Course[] = [
+  // ============================================================
+  // BACHELOR'S DEGREES (14)
+  // ============================================================
+  {
+    id: 'BCP',
+    type: 'bachelor',
+    code: 'BCP',
+    department: { zh: '心理辅导系', en: 'Dept of Counselling & Psychology' },
+    name: {
+      zh: '辅导咨商（荣誉）学士',
+      en: 'Bachelor of Counselling (Hons)',
+    },
+    mqaNo: 'FA0264',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '4年（3年学习 + 1年实习）', en: '4 Years (3 years study + 1 year internship)' },
+    durationYears: 4,
+    intakes: ['Feb', 'May'],
+    tuition: 44700,
+    language: { zh: '英语', en: 'English' },
+    description: {
+      zh: '辅导咨商（荣誉）学士课程专为有志成为专业辅导员的学子而设计。课程涵盖心理辅导理论、技巧与实务，并包含为期一年的专业实习，让学生在真实环境中积累临床经验。毕业生将具备成为马来西亚辅导局注册辅导员的资格。',
+      en: 'The Bachelor of Counselling (Hons) programme is designed for aspiring professional counsellors. It covers counselling theories, techniques, and practices, with a one-year professional internship that provides real-world clinical experience. Graduates will be eligible to register as counsellors with the Malaysian Board of Counsellors.',
+    },
+    subjects: {
+      zh: ['辅导理论', '心理辅导技巧', '人格心理学', '发展心理学', '异常心理学', '团体辅导', '家庭治疗', '心理测评', '伦理与专业问题', '研究方法', '危机干预', '跨文化辅导'],
+      en: ['Counselling Theories', 'Psychological Counselling Skills', 'Personality Psychology', 'Developmental Psychology', 'Abnormal Psychology', 'Group Counselling', 'Family Therapy', 'Psychological Assessment', 'Ethics & Professional Issues', 'Research Methods', 'Crisis Intervention', 'Cross-Cultural Counselling'],
+    },
+    entryRequirements: {
+      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '独中统考文凭持有者', '通过面试评估'],
+      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Independent Chinese Secondary School graduates', 'Pass interview assessment'],
+    },
+    careerProspects: {
+      zh: ['注册辅导员', '学校辅导员', '心理治疗师', '人力资源顾问', '社会服务工作者', '康复辅导员', '企业员工援助计划顾问', '社区心理健康工作者'],
+      en: ['Registered Counsellor', 'School Counsellor', 'Psychotherapist', 'Human Resource Consultant', 'Social Service Worker', 'Rehabilitation Counsellor', 'Employee Assistance Programme (EAP) Consultant', 'Community Mental Health Worker'],
+    },
+    categories: ['counselling', 'social-work'],
+    color: 'rose',
+  },
+  {
+    id: 'BBA',
+    type: 'bachelor',
+    code: 'BBA',
+    department: { zh: '商业管理系', en: 'Dept of Business Management' },
+    name: {
+      zh: '商业行政（荣誉）学士',
+      en: 'Bachelor of Business Administration (Hons)',
+    },
+    mqaNo: 'FA0666',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '3年（8学期）', en: '3 Years (8 Semesters)' },
+    durationYears: 3,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 41200,
+    language: { zh: '英语', en: 'English' },
+    description: {
+      zh: '商业行政（荣誉）学士课程培养具备全面商业知识和领导能力的未来商业领袖。课程涵盖管理学、市场营销、人力资源管理、财务管理等核心领域，强调理论与实践相结合。学生将通过案例分析和企业实习，获得宝贵的实战经验。',
+      en: 'The Bachelor of Business Administration (Hons) programme develops future business leaders with comprehensive business knowledge and leadership skills. The curriculum covers core areas including management, marketing, human resource management, and financial management, emphasising the integration of theory and practice. Students gain valuable hands-on experience through case studies and corporate internships.',
+    },
+    subjects: {
+      zh: ['管理学原理', '商业统计学', '市场营销管理', '人力资源管理', '财务管理', '企业策略', '运营管理', '商业伦理', '组织行为学', '创业学'],
+      en: ['Principles of Management', 'Business Statistics', 'Marketing Management', 'Human Resource Management', 'Financial Management', 'Corporate Strategy', 'Operations Management', 'Business Ethics', 'Organisational Behaviour', 'Entrepreneurship'],
+    },
+    entryRequirements: {
+      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', 'A-Level 至少2科及格', '相关科目的基础文凭'],
+      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'A-Level with at least 2 passes', 'Relevant foundation/diploma'],
+    },
+    careerProspects: {
+      zh: ['企业管理员', '商业顾问', '人力资源经理', '运营经理', '企业家', '项目经理', '行政主管', '业务发展经理'],
+      en: ['Business Administrator', 'Business Consultant', 'Human Resource Manager', 'Operations Manager', 'Entrepreneur', 'Project Manager', 'Executive Officer', 'Business Development Manager'],
+    },
+    categories: ['business'],
+    color: 'amber',
+  },
+  {
+    id: 'BTCSL',
+    type: 'bachelor',
+    code: 'BTCSL',
+    department: { zh: '汉语国际教育系', en: 'Dept of Teaching Chinese as Second Language' },
+    name: {
+      zh: '汉语国际教育（荣誉）学士',
+      en: 'Bachelor of Teaching Chinese as Second Language (Hons)',
+    },
+    mqaNo: 'FA1191',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '3年（8学期）', en: '3 Years (8 Semesters)' },
+    durationYears: 3,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 41200,
+    language: { zh: '中英双语', en: 'Bilingual (Chinese & English)' },
+    description: {
+      zh: '汉语国际教育（荣誉）学士课程培养具备专业汉语教学能力的国际汉语教师。课程结合语言学理论与教学实践，涵盖现代汉语、汉语教学法、跨文化交际等核心内容。毕业生可在国内外从事汉语教学工作，推广中华文化。',
+      en: 'The Bachelor of Teaching Chinese as Second Language (Hons) programme cultivates professional Chinese language teachers for international contexts. The curriculum combines linguistic theory with teaching practice, covering modern Chinese, Chinese teaching methodology, and cross-cultural communication. Graduates can teach Chinese domestically and internationally, promoting Chinese language and culture.',
+    },
+    subjects: {
+      zh: ['现代汉语', '古代汉语', '语言学概论', '汉语教学法', '第二语言习得', '跨文化交际', '中国文学', '汉语写作', '教育心理学', '汉语水平考试教学'],
+      en: ['Modern Chinese', 'Classical Chinese', 'Introduction to Linguistics', 'Chinese Teaching Methodology', 'Second Language Acquisition', 'Cross-Cultural Communication', 'Chinese Literature', 'Chinese Writing', 'Educational Psychology', 'HSK Teaching'],
+    },
+    entryRequirements: {
+      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '具备良好的中英文能力', '对汉语教学有浓厚兴趣'],
+      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Good command of Chinese and English', 'Strong interest in Chinese language teaching'],
+    },
+    careerProspects: {
+      zh: ['国际汉语教师', '华小教师', '语言中心讲师', '对外汉语教学研究员', '文化交流专员', '教材编写员', '翻译', '教育行政人员'],
+      en: ['International Chinese Teacher', 'SJK(C) Teacher', 'Language Centre Lecturer', 'TCSL Researcher', 'Cultural Exchange Officer', 'Teaching Material Developer', 'Translator', 'Education Administrator'],
+    },
+    categories: ['education', 'chinese'],
+    color: 'red',
+  },
+  {
+    id: 'BECE',
+    type: 'bachelor',
+    code: 'BECE',
+    department: { zh: '幼儿教育系', en: 'Dept of Early Childhood Education' },
+    name: {
+      zh: '幼儿教育（荣誉）学士',
+      en: 'Bachelor of Early Childhood Education (Hons)',
+    },
+    mqaNo: 'FA1242',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '3年（8学期）', en: '3 Years (8 Semesters)' },
+    durationYears: 3,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 41200,
+    language: { zh: '英语', en: 'English' },
+    description: {
+      zh: '幼儿教育（荣誉）学士课程培养具备专业素养和创新思维的幼儿教育工作者。课程涵盖儿童发展、课程设计、特殊需求教育等领域，注重培养学生的教学实践能力和教育研究能力。毕业生可注册成为幼儿园教师，开启教育事业的精彩旅程。',
+      en: 'The Bachelor of Early Childhood Education (Hons) programme nurtures professional and innovative early childhood educators. The curriculum covers child development, curriculum design, and special needs education, emphasising teaching practice and educational research capabilities. Graduates can register as kindergarten teachers and embark on a rewarding career in education.',
+    },
+    subjects: {
+      zh: ['儿童发展学', '幼儿教育概论', '幼儿课程设计', '幼儿教学法', '特殊需求幼儿教育', '幼儿心理健康', '儿童文学', '幼儿艺术教育', '教育行政管理', '幼儿教育研究方法'],
+      en: ['Child Development', 'Introduction to Early Childhood Education', 'Early Childhood Curriculum Design', 'Early Childhood Teaching Methods', 'Special Needs Early Childhood Education', 'Child Mental Health', 'Children\'s Literature', 'Early Childhood Arts Education', 'Educational Administration', 'Research Methods in Early Childhood Education'],
+    },
+    entryRequirements: {
+      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '热爱幼儿教育事业', '具有耐心和责任心'],
+      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Passion for early childhood education', 'Patient and responsible'],
+    },
+    careerProspects: {
+      zh: ['幼儿园教师', '幼儿教育顾问', '课程发展专员', '幼儿教育中心主任', '特殊需求教育教师', '儿童发展研究员', '教育培训师', '教育行政人员'],
+      en: ['Kindergarten Teacher', 'Early Childhood Education Consultant', 'Curriculum Development Specialist', 'Early Childhood Education Centre Director', 'Special Needs Education Teacher', 'Child Development Researcher', 'Education Trainer', 'Education Administrator'],
+    },
+    categories: ['education'],
+    color: 'pink',
+  },
+  {
+    id: 'BFA',
+    type: 'bachelor',
+    code: 'BFA',
+    department: { zh: '金融与会计系', en: 'Dept of Finance & Accounting' },
+    name: {
+      zh: '金融与会计（荣誉）学士',
+      en: 'Bachelor of Finance & Accounting (Hons)',
+    },
+    mqaNo: 'FA1002',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '3年（9学期）', en: '3 Years (9 Semesters)' },
+    durationYears: 3,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 43300,
+    language: { zh: '英语', en: 'English' },
+    description: {
+      zh: '金融与会计（荣誉）学士课程为学生提供全面的金融与会计知识体系，涵盖财务报告、审计、税务、投资分析等核心领域。课程结合理论教学与实务操作，培养学生成为具备专业判断力和分析能力的金融会计人才。',
+      en: 'The Bachelor of Finance & Accounting (Hons) programme provides a comprehensive knowledge system in finance and accounting, covering core areas such as financial reporting, auditing, taxation, and investment analysis. The curriculum combines theoretical teaching with practical operations, developing students into finance and accounting professionals with strong analytical and professional judgement skills.',
+    },
+    subjects: {
+      zh: ['财务会计', '管理会计', '公司金融', '审计学', '税务学', '财务管理', '会计信息系统', '商业法', '投资分析', '国际金融'],
+      en: ['Financial Accounting', 'Management Accounting', 'Corporate Finance', 'Auditing', 'Taxation', 'Financial Management', 'Accounting Information Systems', 'Business Law', 'Investment Analysis', 'International Finance'],
+    },
+    entryRequirements: {
+      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', 'A-Level 至少2科及格', '对数字和金融有浓厚兴趣'],
+      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'A-Level with at least 2 passes', 'Strong interest in numbers and finance'],
+    },
+    careerProspects: {
+      zh: ['会计师', '审计师', '财务分析师', '税务顾问', '投资银行分析师', '财务经理', '内部审计师', '风险管理专员'],
+      en: ['Accountant', 'Auditor', 'Financial Analyst', 'Tax Consultant', 'Investment Banking Analyst', 'Finance Manager', 'Internal Auditor', 'Risk Management Specialist'],
+    },
+    categories: ['finance', 'business'],
+    color: 'emerald',
+  },
+  {
+    id: 'BCL',
+    type: 'bachelor',
+    code: 'BCL',
+    department: { zh: '中文系', en: 'Dept of Chinese Studies' },
+    name: {
+      zh: '中文（荣誉）学士',
+      en: 'Bachelor of Chinese (Hons)',
+    },
+    mqaNo: 'FA0593',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '3年（8学期）', en: '3 Years (8 Semesters)' },
+    durationYears: 3,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 39700,
+    language: { zh: '中文', en: 'Chinese' },
+    description: {
+      zh: '中文（荣誉）学士课程是马来西亚最具影响力的中文系本科课程之一。课程涵盖中国文学、语言学、哲学、历史与文化研究，培养学生具备深厚的中文素养和批判性思维能力。毕业生在文化、教育、媒体等领域拥有广阔的发展空间。',
+      en: 'The Bachelor of Chinese (Hons) programme is one of the most influential undergraduate Chinese studies programmes in Malaysia. The curriculum covers Chinese literature, linguistics, philosophy, history, and cultural studies, cultivating students with profound Chinese literacy and critical thinking skills. Graduates enjoy broad career prospects in culture, education, media, and related fields.',
+    },
+    subjects: {
+      zh: ['中国文学史', '现代汉语', '古代汉语', '中国哲学', '中国通史', '马华文学', '文学批评', '汉字学', '东南亚华人研究', '学术论文写作'],
+      en: ['History of Chinese Literature', 'Modern Chinese', 'Classical Chinese', 'Chinese Philosophy', 'Chinese History', 'Malaysian Chinese Literature', 'Literary Criticism', 'Chinese Philology', 'Southeast Asian Chinese Studies', 'Academic Writing'],
+    },
+    entryRequirements: {
+      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '具备良好的中文读写能力', '对中华文化有浓厚兴趣'],
+      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Good command of written and spoken Chinese', 'Strong interest in Chinese culture'],
+    },
+    careerProspects: {
+      zh: ['中文教师', '编辑', '记者', '文化工作者', '翻译', '研究人员', '公关专员', '内容创作者'],
+      en: ['Chinese Language Teacher', 'Editor', 'Journalist', 'Cultural Worker', 'Translator', 'Researcher', 'Public Relations Officer', 'Content Creator'],
+    },
+    categories: ['chinese'],
+    color: 'orange',
+  },
+  {
+    id: 'BVC',
+    type: 'bachelor',
+    code: 'BVC',
+    department: { zh: '美术与设计系', en: 'Dept of Art & Design' },
+    name: {
+      zh: '视觉传达（荣誉）学士',
+      en: 'Bachelor of Visual Communication (Hons)',
+    },
+    mqaNo: 'FA1358',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '3年（8学期）', en: '3 Years (8 Semesters)' },
+    durationYears: 3,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 41900,
+    language: { zh: '英语', en: 'English' },
+    description: {
+      zh: '视觉传达（荣誉）学士课程培养具备创意思维和设计专业技能的视觉传达设计师。课程涵盖平面设计、品牌设计、数字媒体设计、包装设计等领域，注重培养学生的创意表达能力和设计实践能力。',
+      en: 'The Bachelor of Visual Communication (Hons) programme cultivates visual communication designers with creative thinking and professional design skills. The curriculum covers graphic design, brand design, digital media design, and packaging design, emphasising creative expression and design practice capabilities.',
+    },
+    subjects: {
+      zh: ['设计基础', '色彩学', '排版设计', '品牌标识设计', '包装设计', '数字插画', '用户体验设计', '广告设计', '设计史', '毕业设计项目'],
+      en: ['Design Fundamentals', 'Colour Theory', 'Typography', 'Brand Identity Design', 'Packaging Design', 'Digital Illustration', 'User Experience Design', 'Advertising Design', 'Design History', 'Final Year Design Project'],
+    },
+    entryRequirements: {
+      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '需提交作品集', '通过面试评估'],
+      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Portfolio submission required', 'Pass interview assessment'],
+    },
+    careerProspects: {
+      zh: ['视觉设计师', '品牌设计师', 'UI/UX设计师', '插画师', '包装设计师', '艺术总监', '广告创意总监', '自由设计师'],
+      en: ['Visual Designer', 'Brand Designer', 'UI/UX Designer', 'Illustrator', 'Packaging Designer', 'Art Director', 'Creative Director', 'Freelance Designer'],
+    },
+    categories: ['design'],
+    color: 'violet',
+  },
+  {
+    id: 'BSE',
+    type: 'bachelor',
+    code: 'BSE',
+    department: { zh: '人工智能与计算机科学系', en: 'Dept of AI & Computer Science' },
+    name: {
+      zh: '软体工程（荣誉）学士',
+      en: 'Bachelor of Software Engineering (Hons)',
+    },
+    mqaNo: 'FA1443',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '3年（8学期）', en: '3 Years (8 Semesters)' },
+    durationYears: 3,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 41300,
+    language: { zh: '英语', en: 'English' },
+    description: {
+      zh: '软体工程（荣誉）学士课程培养具备扎实编程基础和工程化思维的软件专业人才。课程涵盖程序设计、数据结构、人工智能、云计算等前沿技术，注重项目实践和团队协作能力的培养。毕业生将具备开发高质量软件系统的全面能力。',
+      en: 'The Bachelor of Software Engineering (Hons) programme develops software professionals with solid programming foundations and engineering mindsets. The curriculum covers cutting-edge technologies including programming, data structures, artificial intelligence, and cloud computing, emphasising project practice and teamwork. Graduates will possess comprehensive capabilities to develop high-quality software systems.',
+    },
+    subjects: {
+      zh: ['程序设计基础', '数据结构与算法', '数据库系统', '操作系统', '软件工程', '人工智能', '机器学习', '网页开发', '移动应用开发', '云计算'],
+      en: ['Programming Fundamentals', 'Data Structures & Algorithms', 'Database Systems', 'Operating Systems', 'Software Engineering', 'Artificial Intelligence', 'Machine Learning', 'Web Development', 'Mobile App Development', 'Cloud Computing'],
+    },
+    entryRequirements: {
+      zh: ['SPM 5科优等（包括马来文和数学）', 'UEC 至少5科B级（包括数学）', 'STPM 至少CGPA 2.0', '对编程和科技有浓厚兴趣', '具备逻辑思维能力'],
+      en: ['SPM with 5 credits (including Bahasa Melayu & Mathematics)', 'UEC with at least 5 subjects at Grade B (including Mathematics)', 'STPM with minimum CGPA 2.0', 'Strong interest in programming and technology', 'Logical thinking ability'],
+    },
+    careerProspects: {
+      zh: ['软件工程师', '全栈开发者', '移动应用开发者', 'AI工程师', '系统分析师', '产品经理', '技术顾问', 'IT项目经理'],
+      en: ['Software Engineer', 'Full-Stack Developer', 'Mobile App Developer', 'AI Engineer', 'Systems Analyst', 'Product Manager', 'Technology Consultant', 'IT Project Manager'],
+    },
+    categories: ['tech'],
+    color: 'cyan',
+  },
+  {
+    id: 'BIM',
+    type: 'bachelor',
+    code: 'BIM',
+    department: { zh: '商业管理系', en: 'Dept of Business Management' },
+    name: {
+      zh: '市场营销（荣誉）学士',
+      en: 'Bachelor of Marketing (Hons)',
+    },
+    mqaNo: 'FA0667',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '3年（8学期）', en: '3 Years (8 Semesters)' },
+    durationYears: 3,
+    intakes: ['Feb', 'May', 'Jul', 'Sep'],
+    tuition: 41200,
+    language: { zh: '英语', en: 'English' },
+    description: {
+      zh: '市场营销（荣誉）学士课程培养具备市场洞察力和创新营销策略的专业营销人才。课程涵盖数字营销、品牌管理、消费者行为学、市场调研等核心领域，帮助学生掌握现代营销的理论与实践。',
+      en: 'The Bachelor of Marketing (Hons) programme cultivates marketing professionals with market insight and innovative marketing strategies. The curriculum covers core areas including digital marketing, brand management, consumer behaviour, and market research, helping students master modern marketing theory and practice.',
+    },
+    subjects: {
+      zh: ['市场营销原理', '消费者行为学', '数字营销', '品牌管理', '市场调研', '整合营销传播', '销售管理', '国际营销', '社交媒体营销', '营销策略'],
+      en: ['Principles of Marketing', 'Consumer Behaviour', 'Digital Marketing', 'Brand Management', 'Marketing Research', 'Integrated Marketing Communications', 'Sales Management', 'International Marketing', 'Social Media Marketing', 'Marketing Strategy'],
+    },
+    entryRequirements: {
+      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', 'A-Level 至少2科及格', '具备良好的沟通能力'],
+      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'A-Level with at least 2 passes', 'Good communication skills'],
+    },
+    careerProspects: {
+      zh: ['营销经理', '品牌经理', '数字营销专员', '市场调研分析师', '公关经理', '广告策划', '社交媒体经理', '销售总监'],
+      en: ['Marketing Manager', 'Brand Manager', 'Digital Marketing Specialist', 'Market Research Analyst', 'Public Relations Manager', 'Advertising Planner', 'Social Media Manager', 'Sales Director'],
+    },
+    categories: ['business', 'media'],
+    color: 'yellow',
+  },
+  {
+    id: 'BCS',
+    type: 'bachelor',
+    code: 'BCS',
+    department: { zh: '信息技术系', en: 'Dept of Information Technology' },
+    name: {
+      zh: '信息技术（网络安全）荣誉学士',
+      en: 'Bachelor of Information Technology (Cybersecurity) (Hons)',
+    },
+    mqaNo: 'FA1507',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '3年（8学期）', en: '3 Years (8 Semesters)' },
+    durationYears: 3,
+    intakes: ['Feb', 'May', 'Jul', 'Sep'],
+    tuition: 42200,
+    language: { zh: '英语', en: 'English' },
+    description: {
+      zh: '信息技术（网络安全）荣誉学士课程培养网络安全领域的专业人才，应对日益严峻的网络安全挑战。课程涵盖网络攻防、密码学、数字取证、安全管理等核心内容，帮助学生掌握保护信息系统安全的技能。',
+      en: 'The Bachelor of Information Technology (Cybersecurity) (Hons) programme develops professionals in the cybersecurity field to address increasingly severe cyber threats. The curriculum covers core topics including network attack and defence, cryptography, digital forensics, and security management, equipping students with skills to protect information systems.',
+    },
+    subjects: {
+      zh: ['网络安全基础', '密码学', '网络攻防技术', '数字取证', '信息系统安全', '道德黑客', '安全管理与合规', '数据库安全', '云计算安全', '安全运维'],
+      en: ['Cybersecurity Fundamentals', 'Cryptography', 'Network Attack & Defence', 'Digital Forensics', 'Information Systems Security', 'Ethical Hacking', 'Security Management & Compliance', 'Database Security', 'Cloud Security', 'Security Operations'],
+    },
+    entryRequirements: {
+      zh: ['SPM 5科优等（包括马来文和数学）', 'UEC 至少5科B级（包括数学）', 'STPM 至少CGPA 2.0', '对网络安全有浓厚兴趣', '具备基本的计算机操作能力'],
+      en: ['SPM with 5 credits (including Bahasa Melayu & Mathematics)', 'UEC with at least 5 subjects at Grade B (including Mathematics)', 'STPM with minimum CGPA 2.0', 'Strong interest in cybersecurity', 'Basic computer literacy'],
+    },
+    careerProspects: {
+      zh: ['网络安全分析师', '渗透测试工程师', '安全运维工程师', '数字取证专家', '信息安全顾问', '安全架构师', '事件响应分析师', '合规审计员'],
+      en: ['Cybersecurity Analyst', 'Penetration Tester', 'Security Operations Engineer', 'Digital Forensics Expert', 'Information Security Consultant', 'Security Architect', 'Incident Response Analyst', 'Compliance Auditor'],
+    },
+    categories: ['tech'],
+    color: 'slate',
+  },
+  {
+    id: 'BMS',
+    type: 'bachelor',
+    code: 'BMS',
+    department: { zh: '媒体研究系', en: 'Dept of Media Studies' },
+    name: {
+      zh: '媒体与传播研究（荣誉）学士',
+      en: 'Bachelor of Media & Communication Studies (Hons)',
+    },
+    mqaNo: 'FA1066',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '3年（9学期）', en: '3 Years (9 Semesters)' },
+    durationYears: 3,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 42100,
+    language: { zh: '英语', en: 'English' },
+    description: {
+      zh: '媒体与传播研究（荣誉）学士课程培养具备媒体素养和传播技能的专业传媒人才。课程涵盖新闻学、公共关系、广告学、新媒体等核心领域，帮助学生理解媒体行业的发展趋势和传播规律。',
+      en: 'The Bachelor of Media & Communication Studies (Hons) programme cultivates media professionals with media literacy and communication skills. The curriculum covers core areas including journalism, public relations, advertising, and new media, helping students understand media industry trends and communication principles.',
+    },
+    subjects: {
+      zh: ['传播学概论', '新闻写作', '公共关系原理', '广告学', '新媒体研究', '媒体伦理与法规', '摄影与摄像', '媒体制作', '品牌传播', '媒体研究方法'],
+      en: ['Introduction to Communication', 'News Writing', 'Public Relations Principles', 'Advertising', 'New Media Studies', 'Media Ethics & Law', 'Photography & Videography', 'Media Production', 'Brand Communication', 'Media Research Methods'],
+    },
+    entryRequirements: {
+      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '具备良好的中英文表达能力', '对传媒行业有热情'],
+      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Good command of Chinese and English expression', 'Passion for the media industry'],
+    },
+    careerProspects: {
+      zh: ['记者', '公关专员', '广告策划', '新媒体运营', '内容创作者', '媒体制作人', '品牌传播经理', '新闻编辑'],
+      en: ['Journalist', 'Public Relations Officer', 'Advertising Planner', 'New Media Operator', 'Content Creator', 'Media Producer', 'Brand Communication Manager', 'News Editor'],
+    },
+    categories: ['media'],
+    color: 'fuchsia',
+  },
+  {
+    id: 'BIP',
+    type: 'bachelor',
+    code: 'BIP',
+    department: { zh: '心理辅导系', en: 'Dept of Counselling & Psychology' },
+    name: {
+      zh: '心理学（荣誉）学士',
+      en: 'Bachelor of Psychology (Hons)',
+    },
+    mqaNo: 'FA1413',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '3年', en: '3 Years' },
+    durationYears: 3,
+    intakes: ['Feb', 'May'],
+    tuition: 44700,
+    language: { zh: '英语（中文辅导支持）', en: 'English (with Chinese support)' },
+    description: {
+      zh: '心理学（荣誉）学士课程为学生提供系统全面的心理学知识体系，涵盖认知心理学、社会心理学、临床心理学等多个分支领域。课程注重科学研究和实证分析能力的培养，为学生进一步深造或进入心理学相关行业奠定坚实基础。',
+      en: 'The Bachelor of Psychology (Hons) programme provides a systematic and comprehensive knowledge of psychology, covering multiple branches including cognitive psychology, social psychology, and clinical psychology. The curriculum emphasises scientific research and empirical analysis capabilities, laying a solid foundation for further studies or careers in psychology-related fields.',
+    },
+    subjects: {
+      zh: ['心理学导论', '生物心理学', '认知心理学', '社会心理学', '发展心理学', '异常心理学', '心理统计学', '心理研究方法', '人格心理学', '健康心理学'],
+      en: ['Introduction to Psychology', 'Biological Psychology', 'Cognitive Psychology', 'Social Psychology', 'Developmental Psychology', 'Abnormal Psychology', 'Psychological Statistics', 'Research Methods in Psychology', 'Personality Psychology', 'Health Psychology'],
+    },
+    entryRequirements: {
+      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '对心理学有浓厚兴趣', '具备良好的分析能力'],
+      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Strong interest in psychology', 'Good analytical skills'],
+    },
+    careerProspects: {
+      zh: ['心理顾问', '人力资源专员', '市场调研分析师', '学校心理辅导员', '康复中心工作人员', '行为分析师', '社工', ' UX研究员'],
+      en: ['Psychological Consultant', 'Human Resource Specialist', 'Market Research Analyst', 'School Counsellor', 'Rehabilitation Centre Worker', 'Behavioural Analyst', 'Social Worker', 'UX Researcher'],
+    },
+    categories: ['counselling', 'social-work'],
+    color: 'teal',
+  },
+  {
+    id: 'BFI',
+    type: 'bachelor',
+    code: 'BFI',
+    department: { zh: '金融与会计系', en: 'Dept of Finance & Accounting' },
+    name: {
+      zh: '金融投资管理（荣誉）学士',
+      en: 'Bachelor of Finance & Investment Management (Hons)',
+    },
+    mqaNo: 'FA1652',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '3年（9学期）', en: '3 Years (9 Semesters)' },
+    durationYears: 3,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 41200,
+    language: { zh: '英语', en: 'English' },
+    description: {
+      zh: '金融投资管理（荣誉）学士课程培养具备金融市场分析能力和投资决策技能的金融专业人才。课程涵盖投资分析、财富管理、金融衍生品、风险管理等核心领域，帮助学生掌握金融市场的运作规律和投资策略。',
+      en: 'The Bachelor of Finance & Investment Management (Hons) programme cultivates finance professionals with financial market analysis capabilities and investment decision-making skills. The curriculum covers core areas including investment analysis, wealth management, financial derivatives, and risk management, helping students master financial market operations and investment strategies.',
+    },
+    subjects: {
+      zh: ['投资学', '财富管理', '金融衍生品', '风险管理', '证券分析', '投资组合管理', '金融市场与机构', '公司金融', '金融科技', '国际金融管理'],
+      en: ['Investment', 'Wealth Management', 'Financial Derivatives', 'Risk Management', 'Securities Analysis', 'Portfolio Management', 'Financial Markets & Institutions', 'Corporate Finance', 'Financial Technology', 'International Financial Management'],
+    },
+    entryRequirements: {
+      zh: ['SPM 5科优等（包括马来文和数学）', 'UEC 至少5科B级（包括数学）', 'STPM 至少CGPA 2.0', '对金融投资有浓厚兴趣', '具备数学分析能力'],
+      en: ['SPM with 5 credits (including Bahasa Melayu & Mathematics)', 'UEC with at least 5 subjects at Grade B (including Mathematics)', 'STPM with minimum CGPA 2.0', 'Strong interest in finance and investment', 'Mathematical analysis ability'],
+    },
+    careerProspects: {
+      zh: ['投资分析师', '财富管理顾问', '基金经理', '风险管理师', '证券交易员', '金融顾问', '投资银行家', '资产评估师'],
+      en: ['Investment Analyst', 'Wealth Management Advisor', 'Fund Manager', 'Risk Manager', 'Securities Trader', 'Financial Advisor', 'Investment Banker', 'Asset Valuer'],
+    },
+    categories: ['finance', 'business'],
+    color: 'lime',
+  },
+  {
+    id: 'BCA',
+    type: 'bachelor',
+    code: 'BCA',
+    department: { zh: '戏剧与影像系', en: 'Dept of Drama & Film' },
+    name: {
+      zh: '影视艺术（荣誉）学士学位',
+      en: 'Bachelor of Cinematic Arts (Hons)',
+    },
+    mqaNo: 'FA1723',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '3年', en: '3 Years' },
+    durationYears: 3,
+    intakes: ['May'],
+    tuition: 48500,
+    language: { zh: '马来语或英语', en: 'Bahasa Melayu or English' },
+    description: {
+      zh: '影视艺术（荣誉）学士学位课程培养具备创意表达和技术能力的影视艺术专业人才。课程涵盖导演、编剧、摄影、剪辑、音效设计等核心技能，让学生全面掌握影视制作流程。毕业生将在影视行业中展现卓越的创意和才华。',
+      en: 'The Bachelor of Cinematic Arts (Hons) programme cultivates cinematic arts professionals with creative expression and technical capabilities. The curriculum covers core skills including directing, screenwriting, cinematography, editing, and sound design, providing students with a comprehensive understanding of film production workflows. Graduates will showcase exceptional creativity and talent in the film and television industry.',
+    },
+    subjects: {
+      zh: ['电影导论', '编剧基础', '电影摄影', '影片剪辑', '音效设计', '导演艺术', '纪录片制作', '动画基础', '电影美学', '毕业影视作品'],
+      en: ['Introduction to Film', 'Screenwriting Fundamentals', 'Cinematography', 'Film Editing', 'Sound Design', 'Directing Art', 'Documentary Production', 'Animation Fundamentals', 'Film Aesthetics', 'Final Year Film Project'],
+    },
+    entryRequirements: {
+      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '需提交创意作品集或短片', '通过面试评估'],
+      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Creative portfolio or short film submission required', 'Pass interview assessment'],
+    },
+    careerProspects: {
+      zh: ['电影导演', '编剧', '摄影师', '剪辑师', '音效设计师', '制片人', '影视教师', '自媒体创作者'],
+      en: ['Film Director', 'Screenwriter', 'Cinematographer', 'Film Editor', 'Sound Designer', 'Producer', 'Film Educator', 'Content Creator'],
+    },
+    categories: ['media', 'design'],
+    color: 'purple',
+  },
+
+  // ============================================================
+  // FOUNDATION PROGRAMMES (2)
+  // ============================================================
+  {
+    id: 'FCC',
+    type: 'foundation',
+    code: 'FCC',
+    department: { zh: '中文系', en: 'Dept of Chinese Studies' },
+    name: {
+      zh: '中文传播大学基础课程',
+      en: 'Foundation in Chinese Communication',
+    },
+    mqaNo: 'FA5375',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '1年（3学期）', en: '1 Year (3 Semesters)' },
+    durationYears: 1,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 11700,
+    language: { zh: '中英双语', en: 'Bilingual (Chinese & English)' },
+    description: {
+      zh: '中文传播大学基础课程为有意深造中文、教育、传媒等领域的学子奠定坚实的学术基础。课程通过中英双语教学，提升学生的语文能力和学术素养，为升读相关学士学位课程做好充分准备。',
+      en: 'The Foundation in Chinese Communication programme builds a solid academic foundation for students aspiring to pursue further studies in Chinese studies, education, media, and related fields. Through bilingual instruction in Chinese and English, the programme enhances students\' language proficiency and academic literacy, fully preparing them for relevant degree programmes.',
+    },
+    subjects: {
+      zh: ['学术中文', '学术英文', '传播学概论', '中国文学概论', '语言学入门', '思考技巧', '计算机应用', '马来西亚研究'],
+      en: ['Academic Chinese', 'Academic English', 'Introduction to Communication', 'Introduction to Chinese Literature', 'Introduction to Linguistics', 'Critical Thinking', 'Computer Applications', 'Malaysian Studies'],
+    },
+    entryRequirements: {
+      zh: ['SPM 5科优等', 'UEC 至少3科B级', 'O-Level 至少5科及格', '初中毕业或同等学历', '具备基本中英文能力'],
+      en: ['SPM with 5 credits', 'UEC with at least 3 subjects at Grade B', 'O-Level with at least 5 passes', 'Junior high school graduation or equivalent', 'Basic Chinese and English proficiency'],
+    },
+    careerProspects: {
+      zh: ['升读中文系学士课程', '升读汉语国际教育学士课程', '升读媒体与传播学士课程', '升读教育类学士课程', '中文相关初级职位'],
+      en: ['Progress to Bachelor of Chinese', 'Progress to Bachelor of TCSL', 'Progress to Bachelor of Media & Communication', 'Progress to Education degree programmes', 'Entry-level Chinese-related positions'],
+    },
+    categories: ['chinese', 'education'],
+    color: 'orange',
+  },
+  {
+    id: 'FIA',
+    type: 'foundation',
+    code: 'FIA',
+    department: { zh: '注册处', en: "Registrar's Office" },
+    name: {
+      zh: '文科基础课程',
+      en: 'Foundation in Arts',
+    },
+    mqaNo: 'FA5382',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '1年（3学期）', en: '1 Year (3 Semesters)' },
+    durationYears: 1,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 11700,
+    language: { zh: '马来语/英语双语', en: 'Bilingual (Bahasa Melayu & English)' },
+    description: {
+      zh: '文科基础课程为高中毕业生提供通向大学学位的桥梁，涵盖商业、人文、社会科学等多学科内容。课程帮助学生建立学术基础，提升批判性思维和学习能力，为进入各类学士学位课程做好准备。',
+      en: 'The Foundation in Arts programme serves as a bridge from high school to university, covering multidisciplinary content in business, humanities, and social sciences. The programme helps students build academic foundations, enhance critical thinking and learning capabilities, preparing them for various degree programmes.',
+    },
+    subjects: {
+      zh: ['学术英文', '数学', '商业概论', '经济学原理', '信息技术', '思考技巧', '公共演讲', '马来西亚研究'],
+      en: ['Academic English', 'Mathematics', 'Introduction to Business', 'Principles of Economics', 'Information Technology', 'Critical Thinking', 'Public Speaking', 'Malaysian Studies'],
+    },
+    entryRequirements: {
+      zh: ['SPM 5科优等', 'UEC 至少3科B级', 'O-Level 至少5科及格', '初中毕业或同等学历', '具备基本英文能力'],
+      en: ['SPM with 5 credits', 'UEC with at least 3 subjects at Grade B', 'O-Level with at least 5 passes', 'Junior high school graduation or equivalent', 'Basic English proficiency'],
+    },
+    careerProspects: {
+      zh: ['升读商业行政学士课程', '升读市场营销学士课程', '升读媒体与传播学士课程', '升读设计类学士课程', '升读金融会计类学士课程'],
+      en: ['Progress to Bachelor of Business Administration', 'Progress to Bachelor of Marketing', 'Progress to Bachelor of Media & Communication', 'Progress to Design degree programmes', 'Progress to Finance & Accounting degree programmes'],
+    },
+    categories: ['business', 'education', 'design', 'media'],
+    color: 'stone',
+  },
+
+  // ============================================================
+  // DIPLOMA PROGRAMMES (14)
+  // ============================================================
+  {
+    id: 'DBA',
+    type: 'diploma',
+    code: 'DBA',
+    department: { zh: '商业管理系', en: 'Dept of Business Management' },
+    name: {
+      zh: '商业与行政专业文凭课程',
+      en: 'Diploma in Business Administration',
+    },
+    mqaNo: 'FA6936',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '2年（6学期）', en: '2 Years (6 Semesters)' },
+    durationYears: 2,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 25700,
+    language: { zh: '英语', en: 'English' },
+    description: {
+      zh: '商业与行政专业文凭课程为学生提供实用的商业管理知识和技能，涵盖管理学、市场营销、会计等核心领域。课程注重实践操作，帮助学生快速掌握职场所需的商业能力，为就业或继续深造打下良好基础。',
+      en: 'The Diploma in Business Administration provides students with practical business management knowledge and skills, covering core areas such as management, marketing, and accounting. The programme emphasises practical operations, helping students quickly acquire business capabilities needed in the workplace, laying a solid foundation for employment or further studies.',
+    },
+    subjects: {
+      zh: ['管理学原理', '商业数学', '市场营销基础', '会计学原理', '商业统计', '人力资源管理', '商业通讯', '电子商务', '商业法', '创业学'],
+      en: ['Principles of Management', 'Business Mathematics', 'Fundamentals of Marketing', 'Principles of Accounting', 'Business Statistics', 'Human Resource Management', 'Business Communication', 'E-Commerce', 'Business Law', 'Entrepreneurship'],
+    },
+    entryRequirements: {
+      zh: ['SPM 3科优等（包括马来文）', 'UEC 至少3科B级', 'O-Level 至少3科及格', '初中毕业或同等学历', '对商业管理有兴趣'],
+      en: ['SPM with 3 credits (including Bahasa Melayu)', 'UEC with at least 3 subjects at Grade B', 'O-Level with at least 3 passes', 'Junior high school graduation or equivalent', 'Interest in business management'],
+    },
+    careerProspects: {
+      zh: ['行政助理', '销售代表', '客户服务专员', '商业行政人员', '市场助理', '人事助理', '银行柜员', '创业家'],
+      en: ['Administrative Assistant', 'Sales Representative', 'Customer Service Officer', 'Business Administrator', 'Marketing Assistant', 'HR Assistant', 'Bank Teller', 'Entrepreneur'],
+    },
+    categories: ['business'],
+    color: 'amber',
+  },
+  {
+    id: 'DAC',
+    type: 'diploma',
+    code: 'DAC',
+    department: { zh: '金融与会计系', en: 'Dept of Finance & Accounting' },
+    name: {
+      zh: '会计学专业文凭课程',
+      en: 'Diploma in Accounting',
+    },
+    mqaNo: 'FA8336',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '2年（6学期）', en: '2 Years (6 Semesters)' },
+    durationYears: 2,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 26800,
+    language: { zh: '英语', en: 'English' },
+    description: {
+      zh: '会计学专业文凭课程培养具备扎实会计基础知识和实务操作能力的会计专业人才。课程涵盖财务会计、成本会计、税务等核心内容，帮助学生掌握会计实务技能，为考取专业会计资格认证奠定基础。',
+      en: 'The Diploma in Accounting cultivates accounting professionals with solid foundational knowledge and practical skills. The curriculum covers core content including financial accounting, cost accounting, and taxation, helping students master practical accounting skills and laying the foundation for professional accounting certifications.',
+    },
+    subjects: {
+      zh: ['会计学原理', '财务会计', '成本会计', '管理会计', '税务学', '审计基础', '会计信息系统', '商业法', '商业数学', '财务管理'],
+      en: ['Principles of Accounting', 'Financial Accounting', 'Cost Accounting', 'Management Accounting', 'Taxation', 'Fundamentals of Auditing', 'Accounting Information Systems', 'Business Law', 'Business Mathematics', 'Financial Management'],
+    },
+    entryRequirements: {
+      zh: ['SPM 3科优等（包括马来文和数学）', 'UEC 至少3科B级（包括数学）', 'O-Level 至少3科及格', '对数字敏感', '细心且有责任感'],
+      en: ['SPM with 3 credits (including Bahasa Melayu & Mathematics)', 'UEC with at least 3 subjects at Grade B (including Mathematics)', 'O-Level with at least 3 passes', 'Numerical aptitude', 'Detail-oriented and responsible'],
+    },
+    careerProspects: {
+      zh: ['会计助理', '簿记员', '税务助理', '审计助理', '财务文员', '薪资管理员', '应收账款专员', '应付账款专员'],
+      en: ['Accounting Assistant', 'Bookkeeper', 'Tax Assistant', 'Audit Assistant', 'Finance Clerk', 'Payroll Administrator', 'Accounts Receivable Clerk', 'Accounts Payable Clerk'],
+    },
+    categories: ['finance'],
+    color: 'emerald',
+  },
+  {
+    id: 'DIT',
+    type: 'diploma',
+    code: 'DIT',
+    department: { zh: '信息技术系', en: 'Dept of Information Technology' },
+    name: {
+      zh: '信息技术专业文凭课程',
+      en: 'Diploma in Information Technology',
+    },
+    mqaNo: 'FA6904',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '2年（6学期）', en: '2 Years (6 Semesters)' },
+    durationYears: 2,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 26200,
+    language: { zh: '英语', en: 'English' },
+    description: {
+      zh: '信息技术专业文凭课程培养具备IT技术能力和解决问题能力的科技人才。课程涵盖程序设计、数据库管理、网络技术、网页开发等核心领域，注重实践操作和项目经验，帮助学生快速进入IT行业。',
+      en: 'The Diploma in Information Technology cultivates tech talents with IT technical capabilities and problem-solving skills. The curriculum covers core areas including programming, database management, networking, and web development, emphasising practical operations and project experience to help students quickly enter the IT industry.',
+    },
+    subjects: {
+      zh: ['程序设计基础', '数据库管理', '计算机网络', '网页开发', '操作系统', '系统分析与设计', 'IT项目管理', '多媒体技术', '网络安全基础', '移动应用开发'],
+      en: ['Programming Fundamentals', 'Database Management', 'Computer Networks', 'Web Development', 'Operating Systems', 'Systems Analysis & Design', 'IT Project Management', 'Multimedia Technology', 'Cybersecurity Fundamentals', 'Mobile App Development'],
+    },
+    entryRequirements: {
+      zh: ['SPM 3科优等（包括马来文和数学）', 'UEC 至少3科B级（包括数学）', 'O-Level 至少3科及格', '对科技有兴趣', '具备基本计算机操作能力'],
+      en: ['SPM with 3 credits (including Bahasa Melayu & Mathematics)', 'UEC with at least 3 subjects at Grade B (including Mathematics)', 'O-Level with at least 3 passes', 'Interest in technology', 'Basic computer literacy'],
+    },
+    careerProspects: {
+      zh: ['IT技术支持', '网页开发者', '数据库管理员', '网络管理员', '软件测试员', '系统管理员', 'IT助理', '技术支持专员'],
+      en: ['IT Support', 'Web Developer', 'Database Administrator', 'Network Administrator', 'Software Tester', 'System Administrator', 'IT Assistant', 'Technical Support Specialist'],
+    },
+    categories: ['tech'],
+    color: 'cyan',
+  },
+  {
+    id: 'DMS',
+    type: 'diploma',
+    code: 'DMS',
+    department: { zh: '媒体研究系', en: 'Dept of Media Studies' },
+    name: {
+      zh: '媒体研究专业文凭课程',
+      en: 'Diploma in Media Studies',
+    },
+    mqaNo: 'FA7948',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '2年（6学期）', en: '2 Years (6 Semesters)' },
+    durationYears: 2,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 25200,
+    language: { zh: '中英双语', en: 'Bilingual (Chinese & English)' },
+    description: {
+      zh: '媒体研究专业文凭课程培养具备媒体制作能力和传播素养的实用型传媒人才。课程采用中英双语教学，涵盖新闻采编、新媒体运营、影视制作等核心技能，让学生在多元文化的媒体环境中脱颖而出。',
+      en: 'The Diploma in Media Studies cultivates practical media professionals with media production capabilities and communication literacy. Taught in both Chinese and English, the curriculum covers core skills including news gathering, new media operations, and audiovisual production, enabling students to excel in a multicultural media environment.',
+    },
+    subjects: {
+      zh: ['传播学概论', '新闻写作', '摄影技术', '视频制作', '新媒体运营', '广告学基础', '公关实务', '媒体伦理', '多媒体制作', '媒体实习'],
+      en: ['Introduction to Communication', 'News Writing', 'Photography', 'Video Production', 'New Media Operations', 'Fundamentals of Advertising', 'Public Relations Practice', 'Media Ethics', 'Multimedia Production', 'Media Internship'],
+    },
+    entryRequirements: {
+      zh: ['SPM 3科优等（包括马来文）', 'UEC 至少3科B级', 'O-Level 至少3科及格', '具备良好的语言表达能力', '对媒体行业有兴趣'],
+      en: ['SPM with 3 credits (including Bahasa Melayu)', 'UEC with at least 3 subjects at Grade B', 'O-Level with at least 3 passes', 'Good language expression skills', 'Interest in the media industry'],
+    },
+    careerProspects: {
+      zh: ['媒体助理', '摄影记者', '视频剪辑师', '新媒体运营专员', '活动策划', '公关助理', '内容创作者', '广播助理'],
+      en: ['Media Assistant', 'Photojournalist', 'Video Editor', 'New Media Specialist', 'Event Planner', 'PR Assistant', 'Content Creator', 'Broadcasting Assistant'],
+    },
+    categories: ['media'],
+    color: 'fuchsia',
+  },
+  {
+    id: 'DVA',
+    type: 'diploma',
+    code: 'DVA',
+    department: { zh: '美术与设计系', en: 'Dept of Art & Design' },
+    name: {
+      zh: '视觉艺术专业文凭课程',
+      en: 'Diploma in Visual Arts',
+    },
+    mqaNo: 'FA8069',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '2年（6学期）', en: '2 Years (6 Semesters)' },
+    durationYears: 2,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 36000,
+    language: { zh: '英语', en: 'English' },
+    description: {
+      zh: '视觉艺术专业文凭课程培养具备艺术创作能力和审美素养的视觉艺术人才。课程涵盖绘画、雕塑、版画、数字艺术等多种艺术形式，鼓励学生探索个人艺术风格，发展独特的创意表达能力。',
+      en: 'The Diploma in Visual Arts cultivates visual arts talents with artistic creation capabilities and aesthetic literacy. The curriculum covers diverse art forms including painting, sculpture, printmaking, and digital art, encouraging students to explore their personal artistic style and develop unique creative expression.',
+    },
+    subjects: {
+      zh: ['素描基础', '色彩理论', '绘画技法', '雕塑基础', '版画制作', '数字艺术', '艺术史', '马来西亚艺术', '创意思维', '毕业展览'],
+      en: ['Drawing Fundamentals', 'Colour Theory', 'Painting Techniques', 'Sculpture Fundamentals', 'Printmaking', 'Digital Art', 'Art History', 'Malaysian Art', 'Creative Thinking', 'Final Year Exhibition'],
+    },
+    entryRequirements: {
+      zh: ['SPM 3科优等（包括马来文）', 'UEC 至少3科B级', 'O-Level 至少3科及格', '需提交艺术作品集', '通过面试评估'],
+      en: ['SPM with 3 credits (including Bahasa Melayu)', 'UEC with at least 3 subjects at Grade B', 'O-Level with at least 3 passes', 'Art portfolio submission required', 'Pass interview assessment'],
+    },
+    careerProspects: {
+      zh: ['视觉艺术家', '插画师', '美术教师', '画廊助理', '展览策划', '艺术治疗师助理', '创意设计师', '自由艺术家'],
+      en: ['Visual Artist', 'Illustrator', 'Art Teacher', 'Gallery Assistant', 'Exhibition Curator', 'Art Therapy Assistant', 'Creative Designer', 'Freelance Artist'],
+    },
+    categories: ['design'],
+    color: 'violet',
+  },
+  {
+    id: 'DGD',
+    type: 'diploma',
+    code: 'DGD',
+    department: { zh: '美术与设计系', en: 'Dept of Art & Design' },
+    name: {
+      zh: '平面设计专业文凭课程',
+      en: 'Diploma in Graphic Design',
+    },
+    mqaNo: 'FA8070',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '2年（6学期）', en: '2 Years (6 Semesters)' },
+    durationYears: 2,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 38000,
+    language: { zh: '英语', en: 'English' },
+    description: {
+      zh: '平面设计专业文凭课程培养具备创意设计能力和专业软件操作技能的平面设计师。课程涵盖品牌设计、包装设计、排版设计、数字设计等核心领域，注重培养学生的视觉传达能力和设计思维。',
+      en: 'The Diploma in Graphic Design cultivates graphic designers with creative design capabilities and professional software skills. The curriculum covers core areas including brand design, packaging design, typography, and digital design, emphasising the development of visual communication skills and design thinking.',
+    },
+    subjects: {
+      zh: ['设计基础', '素描与色彩', '排版设计', '标志设计', '包装设计', '品牌设计', '广告设计', '数字插画', '设计软件应用', '毕业设计'],
+      en: ['Design Fundamentals', 'Drawing & Colour', 'Typography', 'Logo Design', 'Packaging Design', 'Brand Design', 'Advertising Design', 'Digital Illustration', 'Design Software Applications', 'Final Year Design Project'],
+    },
+    entryRequirements: {
+      zh: ['SPM 3科优等（包括马来文）', 'UEC 至少3科B级', 'O-Level 至少3科及格', '需提交设计作品集', '对设计有热情'],
+      en: ['SPM with 3 credits (including Bahasa Melayu)', 'UEC with at least 3 subjects at Grade B', 'O-Level with at least 3 passes', 'Design portfolio submission required', 'Passion for design'],
+    },
+    careerProspects: {
+      zh: ['平面设计师', '品牌设计师', '包装设计师', '排版设计师', '广告设计师', 'UI设计师', '自由设计师', '设计助理'],
+      en: ['Graphic Designer', 'Brand Designer', 'Packaging Designer', 'Typography Designer', 'Advertising Designer', 'UI Designer', 'Freelance Designer', 'Design Assistant'],
+    },
+    categories: ['design'],
+    color: 'violet',
+  },
+  {
+    id: 'DID',
+    type: 'diploma',
+    code: 'DID',
+    department: { zh: '室内建筑系', en: 'Dept of Interior Architecture' },
+    name: {
+      zh: '室内设计专业文凭课程',
+      en: 'Diploma in Interior Design',
+    },
+    mqaNo: 'FA8071',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '2.5年（7学期）', en: '2.5 Years (7 Semesters)' },
+    durationYears: 2.5,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 38000,
+    language: { zh: '英语', en: 'English' },
+    description: {
+      zh: '室内设计专业文凭课程培养具备空间设计能力和创意思维的室内设计师。课程涵盖室内设计原理、空间规划、材料应用、照明设计等核心内容，注重实践项目和行业实习，让学生掌握从概念到落地的完整设计流程。',
+      en: 'The Diploma in Interior Design cultivates interior designers with space design capabilities and creative thinking. The curriculum covers core content including interior design principles, space planning, material application, and lighting design, emphasising practical projects and industry internships to help students master the complete design process from concept to implementation.',
+    },
+    subjects: {
+      zh: ['室内设计基础', '空间规划', '室内材料学', '照明设计', '建筑制图', '设计软件（CAD/3D）', '家具设计', '色彩与材质', '商业空间设计', '住宅设计'],
+      en: ['Interior Design Fundamentals', 'Space Planning', 'Interior Materials', 'Lighting Design', 'Architectural Drafting', 'Design Software (CAD/3D)', 'Furniture Design', 'Colour & Materials', 'Commercial Space Design', 'Residential Design'],
+    },
+    entryRequirements: {
+      zh: ['SPM 3科优等（包括马来文）', 'UEC 至少3科B级', 'O-Level 至少3科及格', '需提交设计作品集', '对空间设计有兴趣'],
+      en: ['SPM with 3 credits (including Bahasa Melayu)', 'UEC with at least 3 subjects at Grade B', 'O-Level with at least 3 passes', 'Design portfolio submission required', 'Interest in space design'],
+    },
+    careerProspects: {
+      zh: ['室内设计师', '空间规划师', '展览设计师', '家具设计师', '照明设计师', '设计助理', '3D渲染师', '软装设计师'],
+      en: ['Interior Designer', 'Space Planner', 'Exhibition Designer', 'Furniture Designer', 'Lighting Designer', 'Design Assistant', '3D Visualiser', 'Interior Decorator'],
+    },
+    categories: ['design'],
+    color: 'violet',
+  },
+  {
+    id: 'TCSL',
+    type: 'diploma',
+    code: 'TCSL',
+    department: { zh: '汉语国际教育系', en: 'Dept of Teaching Chinese as Second Language' },
+    name: {
+      zh: '汉语国际教育专业文凭课程',
+      en: 'Diploma in Teaching Chinese as Second Language',
+    },
+    mqaNo: 'FA8465',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '2年（6学期）', en: '2 Years (6 Semesters)' },
+    durationYears: 2,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 25200,
+    language: { zh: '中英双语', en: 'Bilingual (Chinese & English)' },
+    description: {
+      zh: '汉语国际教育专业文凭课程培养具备专业汉语教学能力的实用型人才。课程结合语言学理论与教学实践，让学生掌握汉语教学的核心方法和技巧，为成为国际汉语教师奠定基础。',
+      en: 'The Diploma in Teaching Chinese as Second Language cultivates practical professionals with Chinese language teaching capabilities. The curriculum combines linguistic theory with teaching practice, enabling students to master core Chinese teaching methods and techniques, laying the foundation for becoming international Chinese language teachers.',
+    },
+    subjects: {
+      zh: ['现代汉语', '汉语语音学', '汉语教学法', '第二语言习得', '汉语教材分析', '课堂管理', '教育心理学', '中国文化艺术', '教学实习', '汉语水平考试辅导'],
+      en: ['Modern Chinese', 'Chinese Phonetics', 'Chinese Teaching Methodology', 'Second Language Acquisition', 'Chinese Teaching Material Analysis', 'Classroom Management', 'Educational Psychology', 'Chinese Culture & Arts', 'Teaching Practicum', 'HSK Preparation'],
+    },
+    entryRequirements: {
+      zh: ['SPM 3科优等（包括马来文）', 'UEC 至少3科B级', 'O-Level 至少3科及格', '具备良好的中文能力', '对汉语教学有兴趣'],
+      en: ['SPM with 3 credits (including Bahasa Melayu)', 'UEC with at least 3 subjects at Grade B', 'O-Level with at least 3 passes', 'Good command of Chinese', 'Interest in Chinese language teaching'],
+    },
+    careerProspects: {
+      zh: ['汉语教师', '华小助理教师', '语言中心讲师', '家教', '教材助理编辑', '文化交流助理', '翻译助理', '中文助教'],
+      en: ['Chinese Language Teacher', 'SJK(C) Teaching Assistant', 'Language Centre Tutor', 'Private Tutor', 'Teaching Material Assistant Editor', 'Cultural Exchange Assistant', 'Translation Assistant', 'Chinese Teaching Assistant'],
+    },
+    categories: ['education', 'chinese'],
+    color: 'red',
+  },
+  {
+    id: 'ECE',
+    type: 'diploma',
+    code: 'ECE',
+    department: { zh: '幼儿教育系', en: 'Dept of Early Childhood Education' },
+    name: {
+      zh: '幼儿教育专业文凭课程',
+      en: 'Diploma in Early Childhood Education',
+    },
+    mqaNo: 'FA9013',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '2.25年（7学期）', en: '2.25 Years (7 Semesters)' },
+    durationYears: 2.25,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 24700,
+    language: { zh: '英语', en: 'English' },
+    description: {
+      zh: '幼儿教育专业文凭课程培养具备幼儿教育专业知识和实践能力的幼教工作者。课程涵盖儿童发展、课程设计、教学方法等核心内容，并通过实习让学生在真实教学环境中积累经验。',
+      en: 'The Diploma in Early Childhood Education cultivates early childhood educators with professional knowledge and practical capabilities. The curriculum covers core content including child development, curriculum design, and teaching methods, while internships provide students with real-world teaching experience.',
+    },
+    subjects: {
+      zh: ['幼儿教育概论', '儿童发展学', '幼儿课程设计', '幼儿教学法', '幼儿健康与营养', '幼儿音乐与律动', '幼儿美术与手工', '特殊需求幼儿', '家长沟通', '教学实习'],
+      en: ['Introduction to Early Childhood Education', 'Child Development', 'Early Childhood Curriculum Design', 'Early Childhood Teaching Methods', 'Child Health & Nutrition', 'Early Childhood Music & Movement', 'Early Childhood Art & Craft', 'Special Needs Children', 'Parent Communication', 'Teaching Practicum'],
+    },
+    entryRequirements: {
+      zh: ['SPM 3科优等（包括马来文）', 'UEC 至少3科B级', 'O-Level 至少3科及格', '热爱幼儿教育', '具有耐心和爱心'],
+      en: ['SPM with 3 credits (including Bahasa Melayu)', 'UEC with at least 3 subjects at Grade B', 'O-Level with at least 3 passes', 'Passion for early childhood education', 'Patient and caring'],
+    },
+    careerProspects: {
+      zh: ['幼儿园教师', '托儿所教师', '幼儿教育中心助理', '特殊需求幼儿助理教师', '儿童活动策划', '家教', '幼儿教材编辑助理', '课后辅导教师'],
+      en: ['Kindergarten Teacher', 'Nursery Teacher', 'Early Childhood Centre Assistant', 'Special Needs Teaching Assistant', 'Children\'s Activity Planner', 'Private Tutor', 'Teaching Material Editor Assistant', 'After-School Tutor'],
+    },
+    categories: ['education'],
+    color: 'pink',
+  },
+  {
+    id: 'DIM',
+    type: 'diploma',
+    code: 'DIM',
+    department: { zh: '商业管理系', en: 'Dept of Business Management' },
+    name: {
+      zh: '市场营销专业文凭课程',
+      en: 'Diploma in Marketing',
+    },
+    mqaNo: 'FA6937',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '2年（6学期）', en: '2 Years (6 Semesters)' },
+    durationYears: 2,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 25700,
+    language: { zh: '英语', en: 'English' },
+    description: {
+      zh: '市场营销专业文凭课程培养具备市场分析能力和营销实战技能的营销人才。课程涵盖市场营销原理、数字营销、消费者行为学等核心领域，帮助学生掌握现代营销工具和策略，为进入营销行业做好准备。',
+      en: 'The Diploma in Marketing cultivates marketing talents with market analysis capabilities and practical marketing skills. The curriculum covers core areas including marketing principles, digital marketing, and consumer behaviour, helping students master modern marketing tools and strategies for entering the marketing industry.',
+    },
+    subjects: {
+      zh: ['市场营销原理', '消费者行为学', '数字营销', '销售管理', '广告学基础', '公共关系', '市场调研', '品牌管理', '零售管理', '营销实习'],
+      en: ['Principles of Marketing', 'Consumer Behaviour', 'Digital Marketing', 'Sales Management', 'Fundamentals of Advertising', 'Public Relations', 'Marketing Research', 'Brand Management', 'Retail Management', 'Marketing Internship'],
+    },
+    entryRequirements: {
+      zh: ['SPM 3科优等（包括马来文）', 'UEC 至少3科B级', 'O-Level 至少3科及格', '具备良好的沟通能力', '对营销行业有兴趣'],
+      en: ['SPM with 3 credits (including Bahasa Melayu)', 'UEC with at least 3 subjects at Grade B', 'O-Level with at least 3 passes', 'Good communication skills', 'Interest in the marketing industry'],
+    },
+    careerProspects: {
+      zh: ['营销助理', '销售代表', '社交媒体运营', '客户服务专员', '市场调研助理', '活动策划助理', '零售管理人员', '电商运营'],
+      en: ['Marketing Assistant', 'Sales Representative', 'Social Media Operator', 'Customer Service Officer', 'Market Research Assistant', 'Event Planning Assistant', 'Retail Staff', 'E-Commerce Operator'],
+    },
+    categories: ['business', 'media'],
+    color: 'yellow',
+  },
+  {
+    id: 'DCS',
+    type: 'diploma',
+    code: 'DCS',
+    department: { zh: '人工智能与计算机科学系', en: 'Dept of AI & Computer Science' },
+    name: {
+      zh: '电脑科学专业文凭课程',
+      en: 'Diploma in Computer Science',
+    },
+    mqaNo: 'FA9178',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '2年（6学期）', en: '2 Years (6 Semesters)' },
+    durationYears: 2,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 26200,
+    language: { zh: '英语', en: 'English' },
+    description: {
+      zh: '电脑科学专业文凭课程培养具备计算机科学基础知识和编程能力的科技人才。课程涵盖程序设计、数据结构、算法、人工智能入门等核心内容，为学生进入IT行业或继续深造打下坚实基础。',
+      en: 'The Diploma in Computer Science cultivates tech talents with foundational computer science knowledge and programming capabilities. The curriculum covers core content including programming, data structures, algorithms, and introduction to artificial intelligence, laying a solid foundation for entering the IT industry or pursuing further studies.',
+    },
+    subjects: {
+      zh: ['程序设计基础', '数据结构与算法', '数据库系统', '计算机网络', '操作系统', '软件工程基础', '网页开发', '面向对象编程', '计算机组织与架构', '项目开发'],
+      en: ['Programming Fundamentals', 'Data Structures & Algorithms', 'Database Systems', 'Computer Networks', 'Operating Systems', 'Software Engineering Fundamentals', 'Web Development', 'Object-Oriented Programming', 'Computer Organisation & Architecture', 'Project Development'],
+    },
+    entryRequirements: {
+      zh: ['SPM 3科优等（包括马来文和数学）', 'UEC 至少3科B级（包括数学）', 'O-Level 至少3科及格', '对计算机科学有兴趣', '具备逻辑思维能力'],
+      en: ['SPM with 3 credits (including Bahasa Melayu & Mathematics)', 'UEC with at least 3 subjects at Grade B (including Mathematics)', 'O-Level with at least 3 passes', 'Interest in computer science', 'Logical thinking ability'],
+    },
+    careerProspects: {
+      zh: ['初级程序员', 'IT技术支持', '网页开发者', '软件测试员', '系统管理员', '数据库助理', 'IT助理', '技术文员'],
+      en: ['Junior Programmer', 'IT Support', 'Web Developer', 'Software Tester', 'System Administrator', 'Database Assistant', 'IT Assistant', 'Technical Clerk'],
+    },
+    categories: ['tech'],
+    color: 'cyan',
+  },
+  {
+    id: 'DMD',
+    type: 'diploma',
+    code: 'DMD',
+    department: { zh: '创意多媒体系', en: 'Dept of Creative Multimedia' },
+    name: {
+      zh: '数码媒体设计文凭课程',
+      en: 'Diploma in Digital Media Design',
+    },
+    mqaNo: 'FA9521',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '2年（6学期）', en: '2 Years (6 Semesters)' },
+    durationYears: 2,
+    intakes: ['Feb', 'May', 'Sep'],
+    tuition: 38000,
+    language: { zh: '英语', en: 'English' },
+    description: {
+      zh: '数码媒体设计文凭课程培养具备数字创意能力和技术素养的多媒体设计人才。课程涵盖动画设计、互动设计、游戏设计、视频制作等前沿领域，让学生掌握数字内容创作的全方位技能。',
+      en: 'The Diploma in Digital Media Design cultivates multimedia design talents with digital creative capabilities and technical literacy. The curriculum covers cutting-edge fields including animation design, interactive design, game design, and video production, enabling students to master comprehensive skills in digital content creation.',
+    },
+    subjects: {
+      zh: ['数码设计基础', '2D动画', '3D建模', '互动设计', '游戏设计基础', '视频剪辑', 'UI/UX设计', '动态图形设计', '数字音效', '毕业项目'],
+      en: ['Digital Design Fundamentals', '2D Animation', '3D Modelling', 'Interactive Design', 'Game Design Fundamentals', 'Video Editing', 'UI/UX Design', 'Motion Graphics', 'Digital Audio', 'Final Year Project'],
+    },
+    entryRequirements: {
+      zh: ['SPM 3科优等（包括马来文）', 'UEC 至少3科B级', 'O-Level 至少3科及格', '需提交创意作品集', '对数字媒体有兴趣'],
+      en: ['SPM with 3 credits (including Bahasa Melayu)', 'UEC with at least 3 subjects at Grade B', 'O-Level with at least 3 passes', 'Creative portfolio submission required', 'Interest in digital media'],
+    },
+    careerProspects: {
+      zh: ['动画师', '游戏设计师', '互动设计师', '视频剪辑师', '动态图形设计师', 'UI设计师', '多媒体设计师', '数字内容创作者'],
+      en: ['Animator', 'Game Designer', 'Interaction Designer', 'Video Editor', 'Motion Graphics Designer', 'UI Designer', 'Multimedia Designer', 'Digital Content Creator'],
+    },
+    categories: ['design', 'tech'],
+    color: 'purple',
+  },
+  {
+    id: 'DPA',
+    type: 'diploma',
+    code: 'DPA',
+    department: { zh: '戏剧与影像系', en: 'Dept of Drama & Film' },
+    name: {
+      zh: '表演艺术专业文凭课程',
+      en: 'Diploma in Performing Arts',
+    },
+    mqaNo: 'FA9387',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '2.5年（7学期）', en: '2.5 Years (7 Semesters)' },
+    durationYears: 2.5,
+    intakes: ['Feb', 'May'],
+    tuition: 30200,
+    language: { zh: '英语', en: 'English' },
+    description: {
+      zh: '表演艺术专业文凭课程培养具备舞台表演和幕后制作能力的表演艺术人才。课程涵盖戏剧表演、导演、舞台设计、剧本创作等核心领域，通过丰富的实践演出和作品创作，让学生全面发展艺术素养和专业技能。',
+      en: 'The Diploma in Performing Arts cultivates performing arts talents with stage performance and backstage production capabilities. The curriculum covers core areas including theatrical performance, directing, stage design, and scriptwriting, developing students\' artistic literacy and professional skills through rich practical performances and creative works.',
+    },
+    subjects: {
+      zh: ['表演基础', '声音与台词', '形体训练', '戏剧概论', '导演基础', '舞台技术', '剧本创作', '马来传统戏剧', '华语戏剧', '毕业演出'],
+      en: ['Acting Fundamentals', 'Voice & Speech', 'Movement Training', 'Introduction to Theatre', 'Directing Fundamentals', 'Stage Technology', 'Playwriting', 'Traditional Malay Theatre', 'Chinese Theatre', 'Final Year Performance'],
+    },
+    entryRequirements: {
+      zh: ['SPM 3科优等（包括马来文）', 'UEC 至少3科B级', 'O-Level 至少3科及格', '需通过面试和试镜', '对表演艺术有热情'],
+      en: ['SPM with 3 credits (including Bahasa Melayu)', 'UEC with at least 3 subjects at Grade B', 'O-Level with at least 3 passes', 'Must pass audition and interview', 'Passion for performing arts'],
+    },
+    careerProspects: {
+      zh: ['舞台演员', '影视演员', '导演助理', '舞台监督', '戏剧教师', '活动主持人', '文化工作者', '创意表演者'],
+      en: ['Stage Actor', 'Film/TV Actor', 'Director Assistant', 'Stage Manager', 'Drama Teacher', 'Event Host', 'Cultural Worker', 'Creative Performer'],
+    },
+    categories: ['media', 'design'],
+    color: 'rose',
+  },
+  {
+    id: 'DECM',
+    type: 'diploma',
+    code: 'DECM',
+    department: { zh: '乐龄服务与管理学院', en: 'Academy of Silver Industry & Management' },
+    name: {
+      zh: '长者照护管理专业文凭课程',
+      en: 'Diploma in Elderly Care Management',
+    },
+    mqaNo: 'FA9845',
+    accreditation: 'Full Accreditation',
+    duration: { zh: '2年（6学期）', en: '2 Years (6 Semesters)' },
+    durationYears: 2,
+    intakes: ['May'],
+    tuition: 23200,
+    language: { zh: '马来语/英语/中文', en: 'Bahasa Melayu / English / Chinese' },
+    description: {
+      zh: '长者照护管理专业文凭课程是马来西亚首个专注长者照护管理的高等教育课程，培养具备专业照护技能和管理能力的长者服务人才。课程涵盖老年学、健康照护、机构管理等领域，应对日益增长的乐龄产业需求。',
+      en: 'The Diploma in Elderly Care Management is Malaysia\'s first higher education programme focusing on elderly care management, cultivating elderly service professionals with professional care skills and management capabilities. The curriculum covers gerontology, health care, and institutional management, addressing the growing needs of the silver industry.',
+    },
+    subjects: {
+      zh: ['老年学概论', '长者健康照护', '长者心理学', '照护管理', '乐龄产业管理', '营养与膳食', '康复护理', '社会政策与法律', '活动策划与执行', '实习'],
+      en: ['Introduction to Gerontology', 'Elderly Health Care', 'Psychology of Ageing', 'Care Management', 'Silver Industry Management', 'Nutrition & Dietetics', 'Rehabilitation Nursing', 'Social Policy & Law', 'Activity Planning & Execution', 'Internship'],
+    },
+    entryRequirements: {
+      zh: ['SPM 3科优等（包括马来文）', 'UEC 至少3科B级', 'O-Level 至少3科及格', '对长者照护有热忱', '具有同理心和耐心'],
+      en: ['SPM with 3 credits (including Bahasa Melayu)', 'UEC with at least 3 subjects at Grade B', 'O-Level with at least 3 passes', 'Passion for elderly care', 'Empathetic and patient'],
+    },
+    careerProspects: {
+      zh: ['照护中心管理员', '长者照护经理', '康复中心专员', '社区健康工作者', '养老院运营经理', '社工', '健康顾问', '活动策划师'],
+      en: ['Care Centre Administrator', 'Elderly Care Manager', 'Rehabilitation Centre Specialist', 'Community Health Worker', 'Nursing Home Operations Manager', 'Social Worker', 'Health Consultant', 'Activity Planner'],
+    },
+    categories: ['social-work', 'care'],
+    color: 'stone',
+  },
+];
