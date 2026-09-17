@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { z } from 'zod';
+import { isValidPhone, sanitizePhoneInput } from '@/lib/phone';
 
 const inquirySchema = z.object({
   name: z.string().min(2),
@@ -16,11 +17,16 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const data = inquirySchema.parse(body);
 
+    const phone = data.phone ? sanitizePhoneInput(data.phone) : '';
+    if (data.phone && !isValidPhone(phone)) {
+      return NextResponse.json({ success: false, error: 'Invalid phone' }, { status: 400 });
+    }
+
     await db.inquiry.create({
       data: {
         name: data.name,
         email: data.email,
-        phone: data.phone || null,
+        phone: phone || null,
         programme: data.programme || null,
         message: data.message || null,
         quizResult: data.quizResult || null,

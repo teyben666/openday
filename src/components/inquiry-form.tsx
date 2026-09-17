@@ -24,6 +24,7 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Send, Loader2, ArrowRight, Mail, Phone } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { isValidPhone, phoneValidationMessage, sanitizePhoneInput } from '@/lib/phone';
 
 interface InquiryFormProps {
   preSelectedProgramme?: string;
@@ -63,6 +64,10 @@ export function InquiryForm({ preSelectedProgramme }: InquiryFormProps) {
       newErrors.email = t('请输入有效的邮箱地址', 'Please enter a valid email address');
     }
 
+    if (phone && !isValidPhone(phone)) {
+      newErrors.phone = phoneValidationMessage(lang);
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
@@ -81,7 +86,7 @@ export function InquiryForm({ preSelectedProgramme }: InquiryFormProps) {
         body: JSON.stringify({
           name: name.trim(),
           email: email.trim(),
-          phone: phone.trim() || undefined,
+          phone: phone ? sanitizePhoneInput(phone) : undefined,
           programme: programme || undefined,
           message: message.trim() || undefined,
         }),
@@ -210,11 +215,14 @@ export function InquiryForm({ preSelectedProgramme }: InquiryFormProps) {
                 <Input
                   id="inquiry-phone"
                   type="tel"
-                  placeholder={t('请输入您的电话号码', 'Enter your phone number')}
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  placeholder={t('例如 0123456789', 'e.g. 0123456789')}
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => setPhone(sanitizePhoneInput(e.target.value))}
                   disabled={isSubmitting}
                 />
+                {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
               </div>
 
               {/* Programme of interest */}

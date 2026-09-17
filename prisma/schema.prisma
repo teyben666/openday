@@ -41,3 +41,23 @@ model Inquiry {
   quizResult   String?
   createdAt    DateTime @default(now())
 }
+
+model Application {
+  id                String   @id @default(cuid())
+  referenceId       String   @unique @default(cuid())
+  name              String
+  email             String
+  phone             String?
+  ic                String?
+  qualification     String?
+  school            String?
+  graduationYear    String?
+  gradesResult      String?
+  programme         String
+  documentNotes     String?
+  proofPath         String?
+  fromDiscovery     Boolean  @default(false)
+  discoveryProfile  String?
+  status            String   @default("pending")
+  createdAt         DateTime @default(now())
+}

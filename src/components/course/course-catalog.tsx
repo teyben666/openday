@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -25,11 +25,12 @@ import { courses } from '@/data/courses';
 import { useLanguage } from '@/store/use-language';
 import { useComparison } from '@/store/use-comparison';
 import CourseCard from '@/components/course/course-card';
-import CourseDetail from '@/components/course/course-detail';
+import { useCourseUi } from '@/components/site-layout';
 import type { Course, CourseType } from '@/data/courses';
 
 interface CourseCatalogProps {
-  onViewDetail: (id: string) => void;
+  initialCategoryFilter?: string | null;
+  onCategoryFilterConsumed?: () => void;
 }
 
 type SortKey = 'tuition-asc' | 'tuition-desc' | 'duration-asc' | 'duration-desc' | 'name';
@@ -51,28 +52,35 @@ const DURATION_OPTIONS = [
   { label: { zh: '4年', en: '4 Years' }, value: '4' },
 ];
 
-export default function CourseCatalog({ onViewDetail: onViewDetailProp }: CourseCatalogProps) {
+export default function CourseCatalog({
+  initialCategoryFilter,
+  onCategoryFilterConsumed,
+}: CourseCatalogProps) {
   const { lang, t } = useLanguage();
   const { selectedIds, clear } = useComparison();
+  const { openDetail } = useCourseUi();
 
   // Filter state
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('all');
+  const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [departmentFilter, setDepartmentFilter] = useState<string>('all');
   const [durationFilter, setDurationFilter] = useState<string>('all');
   const [tuitionFilter, setTuitionFilter] = useState<string>('all');
   const [sortKey, setSortKey] = useState<SortKey>('name');
   const [filterSheetOpen, setFilterSheetOpen] = useState(false);
 
-  // Detail dialog state
-  const [detailCourse, setDetailCourse] = useState<Course | null>(null);
-  const [detailOpen, setDetailOpen] = useState(false);
+  useEffect(() => {
+    if (initialCategoryFilter) {
+      setCategoryFilter(initialCategoryFilter);
+      onCategoryFilterConsumed?.();
+    }
+  }, [initialCategoryFilter, onCategoryFilterConsumed]);
+
+  // Detail dialog handled by SiteLayout via useCourseUi
 
   const handleViewDetail = (id: string) => {
-    const c = courses.find((c) => c.id === id) ?? null;
-    setDetailCourse(c);
-    setDetailOpen(true);
-    onViewDetailProp(id);
+    openDetail(id);
   };
 
   // Unique departments
@@ -106,6 +114,11 @@ export default function CourseCatalog({ onViewDetail: onViewDetailProp }: Course
     // Type
     if (typeFilter !== 'all') {
       result = result.filter((c) => c.type === typeFilter);
+    }
+
+    // Category (field)
+    if (categoryFilter !== 'all') {
+      result = result.filter((c) => c.categories.includes(categoryFilter));
     }
 
     // Department
@@ -147,7 +160,7 @@ export default function CourseCatalog({ onViewDetail: onViewDetailProp }: Course
     }
 
     return result;
-  }, [search, typeFilter, departmentFilter, durationFilter, tuitionFilter, sortKey]);
+  }, [search, typeFilter, categoryFilter, departmentFilter, durationFilter, tuitionFilter, sortKey]);
 
   const resetFilters = () => {
     setSearch('');
@@ -524,12 +537,12 @@ export default function CourseCatalog({ onViewDetail: onViewDetailProp }: Course
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed bottom-0 left-0 right-0 z-40 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80"
+            className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80"
           >
-            <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
-              <div className="flex items-center gap-2 text-sm">
-                <GitCompareArrows className="h-4 w-4 text-emerald-600" />
-                <span className="font-medium">
+            <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2 px-4 py-2 sm:h-14 sm:flex-nowrap sm:px-6">
+              <div className="flex min-w-0 items-center gap-2 text-sm">
+                <GitCompareArrows className="h-4 w-4 shrink-0 text-emerald-600" />
+                <span className="truncate font-medium">
                   {t(
                     `已选择 ${selectedIds.length} 个课程进行对比`,
                     `${selectedIds.length} programme${selectedIds.length !== 1 ? 's' : ''} selected for comparison`
@@ -561,13 +574,6 @@ export default function CourseCatalog({ onViewDetail: onViewDetailProp }: Course
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Detail dialog */}
-      <CourseDetail
-        course={detailCourse}
-        open={detailOpen}
-        onOpenChange={setDetailOpen}
-      />
     </section>
   );
 }

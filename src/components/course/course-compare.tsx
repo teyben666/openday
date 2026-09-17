@@ -10,11 +10,11 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Trash2, GraduationCap } from 'lucide-react';
 import type { Course } from '@/data/courses';
+import { cn } from '@/lib/utils';
 
 type BilingualField = { zh: string; en: string };
 
@@ -47,29 +47,27 @@ function formatTuition(amount: number): string {
 function ComparisonRow({
   label,
   selectedCourses,
-  lang,
+  gridCols,
   render,
 }: {
   label: string;
   selectedCourses: Course[];
-  lang: 'zh' | 'en';
+  gridCols: string;
   render: (course: Course) => React.ReactNode;
 }) {
   const isAlt = courses.indexOf(selectedCourses[0]) % 2 === 0;
 
   return (
     <div
-      className={`grid gap-4 ${
-        selectedCourses.length === 2
-          ? 'grid-cols-[140px_1fr_1fr]'
-          : 'grid-cols-[140px_1fr_1fr_1fr]'
-      } border-b py-3 px-4 ${isAlt ? 'bg-muted/40' : 'bg-background'}`}
+      className={`grid gap-2 border-b px-3 py-3 sm:gap-4 sm:px-4 ${gridCols} ${
+        isAlt ? 'bg-muted/40' : 'bg-background'
+      }`}
     >
-      <div className="text-sm font-medium text-muted-foreground flex items-center">
+      <div className="flex items-start text-xs font-medium text-muted-foreground sm:text-sm">
         {label}
       </div>
       {selectedCourses.map((course) => (
-        <div key={course.id} className="text-sm">
+        <div key={course.id} className="min-w-0 break-words text-xs sm:text-sm">
           {render(course)}
         </div>
       ))}
@@ -87,14 +85,24 @@ export function CourseCompare({ open, onOpenChange }: CourseCompareProps) {
 
   const hasCourses = selectedCourses.length > 0;
 
+  const gridCols =
+    selectedCourses.length === 2
+      ? 'grid-cols-[88px_minmax(0,1fr)_minmax(0,1fr)] sm:grid-cols-[140px_minmax(0,1fr)_minmax(0,1fr)]'
+      : 'grid-cols-[88px_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] sm:grid-cols-[140px_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)]';
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl w-[95vw] p-0 gap-0">
-        <DialogHeader className="p-6 pb-4">
-          <div className="flex items-center justify-between">
-            <div>
+      <DialogContent
+        className={cn(
+          '!flex h-[min(92vh,900px)] max-h-[92vh] w-[calc(100%-1.5rem)] flex-col gap-0 overflow-hidden p-0',
+          'sm:max-w-5xl',
+        )}
+      >
+        <DialogHeader className="shrink-0 space-y-0 border-b px-4 pb-4 pt-5 pr-12 sm:px-6">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
               <DialogTitle className="text-xl flex items-center gap-2">
-                <GraduationCap className="h-5 w-5 text-emerald-600" />
+                <GraduationCap className="h-5 w-5 shrink-0 text-emerald-600" />
                 {t('课程对比', 'Course Comparison')}
               </DialogTitle>
               <DialogDescription className="mt-1">
@@ -109,7 +117,7 @@ export function CourseCompare({ open, onOpenChange }: CourseCompareProps) {
                 variant="ghost"
                 size="sm"
                 onClick={clear}
-                className="text-muted-foreground hover:text-destructive"
+                className="shrink-0 text-muted-foreground hover:text-destructive"
               >
                 <Trash2 className="h-4 w-4 mr-1" />
                 {t('清空', 'Clear All')}
@@ -119,7 +127,7 @@ export function CourseCompare({ open, onOpenChange }: CourseCompareProps) {
         </DialogHeader>
 
         {!hasCourses ? (
-          <div className="flex flex-col items-center justify-center py-16 px-6">
+          <div className="flex min-h-0 flex-1 flex-col items-center justify-center px-6 py-16">
             <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
               <GraduationCap className="h-8 w-8 text-muted-foreground" />
             </div>
@@ -137,15 +145,11 @@ export function CourseCompare({ open, onOpenChange }: CourseCompareProps) {
             </p>
           </div>
         ) : (
-          <ScrollArea className="max-h-[70vh]">
-            <div className="min-w-[600px]">
+          <div className="min-h-0 flex-1 overflow-auto overscroll-contain">
+            <div className="min-w-0">
               {/* Column headers with course names */}
               <div
-                className={`grid gap-4 sticky top-0 z-10 bg-emerald-600 text-white py-3 px-4 ${
-                  selectedCourses.length === 2
-                    ? 'grid-cols-[140px_1fr_1fr]'
-                    : 'grid-cols-[140px_1fr_1fr_1fr]'
-                }`}
+                className={`sticky top-0 z-10 grid gap-2 bg-emerald-600 py-3 px-3 text-white sm:gap-4 sm:px-4 ${gridCols}`}
               >
                 <div />
                 {selectedCourses.map((course) => (
@@ -177,32 +181,32 @@ export function CourseCompare({ open, onOpenChange }: CourseCompareProps) {
 
               {/* Comparison rows */}
               <ComparisonRow
+                gridCols={gridCols}
                 label={t('课程名称', 'Course')}
                 selectedCourses={selectedCourses}
-                lang={lang}
                 render={(course) => (
                   <span className="font-medium">{bf(course.name, lang)}</span>
                 )}
               />
 
               <ComparisonRow
+                gridCols={gridCols}
                 label={t('院系', 'Department')}
                 selectedCourses={selectedCourses}
-                lang={lang}
                 render={(course) => <span>{bf(course.department, lang)}</span>}
               />
 
               <ComparisonRow
+                gridCols={gridCols}
                 label={t('学制', 'Duration')}
                 selectedCourses={selectedCourses}
-                lang={lang}
                 render={(course) => <span>{bf(course.duration, lang)}</span>}
               />
 
               <ComparisonRow
+                gridCols={gridCols}
                 label={t('学费', 'Tuition')}
                 selectedCourses={selectedCourses}
-                lang={lang}
                 render={(course) => (
                   <span className="font-semibold text-emerald-700 dark:text-emerald-400">
                     {formatTuition(course.tuition)}
@@ -211,9 +215,9 @@ export function CourseCompare({ open, onOpenChange }: CourseCompareProps) {
               />
 
               <ComparisonRow
+                gridCols={gridCols}
                 label={t('入学月份', 'Intakes')}
                 selectedCourses={selectedCourses}
-                lang={lang}
                 render={(course) => (
                   <div className="flex flex-wrap gap-1">
                     {course.intakes.map((intake) => (
@@ -230,16 +234,16 @@ export function CourseCompare({ open, onOpenChange }: CourseCompareProps) {
               />
 
               <ComparisonRow
+                gridCols={gridCols}
                 label={t('授课语言', 'Language')}
                 selectedCourses={selectedCourses}
-                lang={lang}
                 render={(course) => <span>{bf(course.language, lang)}</span>}
               />
 
               <ComparisonRow
+                gridCols={gridCols}
                 label={t('简介', 'Description')}
                 selectedCourses={selectedCourses}
-                lang={lang}
                 render={(course) => (
                   <span className="text-muted-foreground leading-relaxed">
                     {truncate(bf(course.description, lang), 2)}
@@ -248,9 +252,9 @@ export function CourseCompare({ open, onOpenChange }: CourseCompareProps) {
               />
 
               <ComparisonRow
+                gridCols={gridCols}
                 label={t('入学要求', 'Entry Req.')}
                 selectedCourses={selectedCourses}
-                lang={lang}
                 render={(course) => {
                   const reqs = course.entryRequirements[lang];
                   return (
@@ -266,9 +270,9 @@ export function CourseCompare({ open, onOpenChange }: CourseCompareProps) {
               />
 
               <ComparisonRow
+                gridCols={gridCols}
                 label={t('就业前景', 'Careers')}
                 selectedCourses={selectedCourses}
-                lang={lang}
                 render={(course) => {
                   const careers = course.careerProspects[lang];
                   return (
@@ -283,7 +287,7 @@ export function CourseCompare({ open, onOpenChange }: CourseCompareProps) {
                 }}
               />
             </div>
-          </ScrollArea>
+          </div>
         )}
       </DialogContent>
     </Dialog>

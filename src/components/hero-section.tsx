@@ -1,17 +1,12 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/store/use-language';
 import { Sparkles, ArrowDown, BookOpen } from 'lucide-react';
 
-interface HeroSectionProps {
-  onScrollToQuiz: () => void;
-  onScrollToCatalog: () => void;
-}
-
-/* ─── typing effect hook ─── */
 function useTypingEffect(strings: string[], speed = 80, pause = 2000) {
   const [display, setDisplay] = useState('');
   const [strIdx, setStrIdx] = useState(0);
@@ -51,7 +46,6 @@ function useTypingEffect(strings: string[], speed = 80, pause = 2000) {
   return display;
 }
 
-/* ─── floating particle component ─── */
 function FloatingShape({
   className,
   delay = 0,
@@ -80,7 +74,7 @@ function FloatingShape({
   );
 }
 
-export default function HeroSection({ onScrollToQuiz, onScrollToCatalog }: HeroSectionProps) {
+export default function HeroSection() {
   const { t } = useLanguage();
 
   const typingStrings = [
@@ -90,14 +84,6 @@ export default function HeroSection({ onScrollToQuiz, onScrollToCatalog }: HeroS
   ];
 
   const typed = useTypingEffect(typingStrings, 70, 2200);
-
-  const handleQuizClick = useCallback(() => {
-    onScrollToQuiz();
-  }, [onScrollToQuiz]);
-
-  const handleCatalogClick = useCallback(() => {
-    onScrollToCatalog();
-  }, [onScrollToCatalog]);
 
   return (
     <section className="relative w-full min-h-[92vh] flex items-center justify-center overflow-hidden">
@@ -227,20 +213,24 @@ export default function HeroSection({ onScrollToQuiz, onScrollToCatalog }: HeroS
         >
           <Button
             size="lg"
-            onClick={handleQuizClick}
+            asChild
             className="w-full sm:w-auto bg-white text-emerald-700 hover:bg-emerald-50 font-bold text-base px-8 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
           >
-            <Sparkles className="mr-2 h-5 w-5" />
-            {t('发现你的未来', 'Discover Your Future')}
+            <Link href="/discovery">
+              <Sparkles className="mr-2 h-5 w-5" />
+              {t('发现你的未来', 'Discover Your Future')}
+            </Link>
           </Button>
           <Button
             size="lg"
             variant="outline"
-            onClick={handleCatalogClick}
-            className="w-full sm:w-auto border-2 border-white/70 text-white hover:bg-white/20 hover:border-white font-bold text-base px-8 py-6 rounded-xl backdrop-blur-sm transition-all duration-300 cursor-pointer shadow-lg shadow-black/10"
+            asChild
+            className="w-full sm:w-auto border-2 border-white/70 bg-transparent text-white hover:bg-white/20 hover:text-white hover:border-white font-bold text-base px-8 py-6 rounded-xl backdrop-blur-sm transition-all duration-300 cursor-pointer shadow-lg shadow-black/10"
           >
-            <BookOpen className="mr-2 h-5 w-5" />
-            {t('浏览课程', 'Browse Courses')}
+            <Link href="/courses">
+              <BookOpen className="mr-2 h-5 w-5" />
+              {t('浏览课程', 'Browse Courses')}
+            </Link>
           </Button>
         </motion.div>
 
