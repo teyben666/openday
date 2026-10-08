@@ -9,9 +9,11 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
+/** Rarely above-the-fold (admin refs, confirmation codes) — don't preload */
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -30,7 +32,9 @@ export const metadata: Metadata = {
     "Malaysia university",
   ],
   icons: {
-    icon: "/logo.svg",
+    icon: [{ url: "/neuc-logo.png", type: "image/png" }],
+    apple: "/neuc-logo.png",
+    shortcut: "/neuc-logo.png",
   },
 };
 
@@ -42,7 +46,7 @@ export default function RootLayout({
   return (
     <html lang="zh" suppressHydrationWarning data-scroll-behavior="smooth">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-background text-foreground`}
       >
         {children}
         <Toaster />

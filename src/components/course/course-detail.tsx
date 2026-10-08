@@ -22,14 +22,12 @@ import {
   DollarSign,
   Globe,
   Award,
-  Bookmark,
   GraduationCap,
   MessageCircle,
 } from 'lucide-react';
 import type { Course } from '@/data/courses';
 import { useLanguage } from '@/store/use-language';
 import { useComparison } from '@/store/use-comparison';
-import { useShortlist } from '@/store/use-discovery';
 import { useDiscovery } from '@/store/use-discovery';
 import { buildWhatsAppUrl, buildDiscoveryWhatsAppMessage } from '@/lib/contact';
 import { cn } from '@/lib/utils';
@@ -53,27 +51,18 @@ const typeBadgeClass: Record<string, string> = {
 };
 
 const colorStripMap: Record<string, string> = {
-  amber: 'bg-amber-500',
-  cyan: 'bg-cyan-500',
-  emerald: 'bg-emerald-500',
-  fuchsia: 'bg-fuchsia-500',
-  lime: 'bg-lime-500',
-  orange: 'bg-orange-500',
-  pink: 'bg-pink-500',
-  purple: 'bg-purple-500',
-  red: 'bg-red-500',
-  rose: 'bg-rose-500',
-  slate: 'bg-slate-500',
-  stone: 'bg-stone-500',
-  teal: 'bg-teal-500',
-  violet: 'bg-violet-500',
+  purple: 'bg-purple-600',
+  red: 'bg-red-600',
+  blue: 'bg-blue-600',
   yellow: 'bg-yellow-500',
+  darkcyan: 'bg-[#0e7490]',
+  black: 'bg-neutral-900',
+  peach: 'bg-[#FCD5CE]',
 };
 
 export default function CourseDetail({ course, open, onOpenChange }: CourseDetailProps) {
   const { lang, t } = useLanguage();
   const { isSelected, toggle } = useComparison();
-  const { toggle: toggleShortlist, isInShortlist } = useShortlist();
   const { setSelectedProgramme } = useDiscovery();
 
   if (!course) return null;
@@ -225,15 +214,6 @@ export default function CourseDetail({ course, open, onOpenChange }: CourseDetai
         {/* Bottom actions */}
         <div className="flex shrink-0 flex-col gap-2 border-t bg-background p-4">
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:flex-wrap sm:justify-end">
-            <Button
-              variant={isInShortlist(course.id) ? 'default' : 'outline'}
-              className={isInShortlist(course.id) ? 'bg-teal-600 hover:bg-teal-700' : ''}
-              onClick={() => toggleShortlist(course.id)}
-            >
-              <Bookmark className="mr-1.5 h-4 w-4" />
-              {isInShortlist(course.id) ? t('已收藏', 'Saved') : t('加入收藏', 'Shortlist')}
-            </Button>
-
             <Button
               variant={selected ? 'default' : 'outline'}
               className={selected ? 'bg-emerald-600 hover:bg-emerald-700' : ''}

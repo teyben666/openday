@@ -1,6 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
 import HeroSection from '@/components/hero-section';
 import { WhyChooseUs } from '@/components/why-choose-us';
 import { useLanguage } from '@/store/use-language';
@@ -8,13 +10,34 @@ import { Button } from '@/components/ui/button';
 import { buildWhatsAppUrl, buildGeneralWhatsAppMessage } from '@/lib/contact';
 import { GraduationCap, BookOpen, Compass, MessageCircle } from 'lucide-react';
 
+/** Shared campus photo behind Why Choose Us → CTAs → WhatsApp. */
+function CampusGlassBand({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="relative isolate overflow-hidden">
+      <div className="absolute inset-0 -z-10">
+        <Image
+          src="/campus-bg.jpg"
+          alt=""
+          fill
+          priority={false}
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        {/* Soft veil so frosted glass has something to blur */}
+        <div className="absolute inset-0 bg-black/35" />
+      </div>
+      {children}
+    </div>
+  );
+}
+
 function HomeCtaCards() {
   const { t } = useLanguage();
   const cards = [
     {
       href: '/discovery',
       icon: Compass,
-      title: t('Course Discovery', 'Course Discovery'),
+      title: t('课程探索', 'Course Discovery'),
       desc: t('15 题测验，发现适合你的课程方向', '15-question test to find your direction'),
     },
     {
@@ -32,18 +55,27 @@ function HomeCtaCards() {
   ];
 
   return (
-    <section className="py-16 px-4 md:px-8 bg-gray-50 dark:bg-gray-900/30">
-      <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-        {cards.map((c) => (
-          <Link
+    <section className="px-4 py-16 md:px-8">
+      <div className="relative z-10 mx-auto grid max-w-5xl grid-cols-1 gap-5 md:grid-cols-3 md:gap-6">
+        {cards.map((c, i) => (
+          <motion.div
             key={c.href}
-            href={c.href}
-            className="rounded-2xl border bg-white dark:bg-gray-900 p-6 hover:border-emerald-400 hover:shadow-md transition-all"
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.08 }}
           >
-            <c.icon className="h-8 w-8 text-emerald-600 mb-3" />
-            <h3 className="font-bold text-lg">{c.title}</h3>
-            <p className="text-sm text-muted-foreground mt-2">{c.desc}</p>
-          </Link>
+            <Link
+              href={c.href}
+              className="glass-panel glass-panel-hover block rounded-[1.35rem] p-6"
+            >
+              <div className="glass-icon mb-4 flex h-12 w-12 items-center justify-center rounded-2xl">
+                <c.icon className="h-6 w-6 text-emerald-400" />
+              </div>
+              <h3 className="text-lg font-bold text-white">{c.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-white">{c.desc}</p>
+            </Link>
+          </motion.div>
         ))}
       </div>
     </section>
@@ -54,13 +86,24 @@ function ContactCta() {
   const { t, lang } = useLanguage();
   const waUrl = buildWhatsAppUrl(buildGeneralWhatsAppMessage(lang));
   return (
-    <section className="py-12 text-center px-4">
-      <Button size="lg" className="bg-[#25D366] hover:bg-[#1fb855] text-white" asChild>
-        <a href={waUrl} target="_blank" rel="noopener noreferrer">
-          <MessageCircle className="mr-2 h-5 w-5" />
-          {t('WhatsApp 联系招生顾问', 'Chat with Advisor on WhatsApp')}
-        </a>
-      </Button>
+    <section className="px-4 pb-16 pt-4 text-center md:pb-20">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="relative z-10"
+      >
+        <Button
+          size="lg"
+          className="rounded-full bg-[#25D366] px-8 text-white shadow-lg hover:bg-[#1fb855]"
+          asChild
+        >
+          <a href={waUrl} target="_blank" rel="noopener noreferrer">
+            <MessageCircle className="mr-2 h-5 w-5" />
+            {t('WhatsApp 联系招生顾问', 'Chat with Advisor on WhatsApp')}
+          </a>
+        </Button>
+      </motion.div>
     </section>
   );
 }
@@ -69,9 +112,11 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
-      <WhyChooseUs />
-      <HomeCtaCards />
-      <ContactCta />
+      <CampusGlassBand>
+        <WhyChooseUs />
+        <HomeCtaCards />
+        <ContactCta />
+      </CampusGlassBand>
     </>
   );
 }

@@ -46,7 +46,7 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
     <CourseUiContext.Provider value={{ openDetail, openCompare, detailViewCount }}>
       <div className="min-h-screen flex flex-col">
         <Navbar />
-        <main className="flex-1 pt-16">{children}</main>
+        <main className="flex-1 pt-24">{children}</main>
         <Footer />
         <CourseDetail course={detailCourse} open={detailOpen} onOpenChange={setDetailOpen} />
         <CourseCompare open={compareOpen} onOpenChange={setCompareOpen} />

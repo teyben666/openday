@@ -56,6 +56,8 @@ model Application {
   programme         String
   documentNotes     String?
   proofPath         String?
+  /** JSON summary of the MiniCPM-V reading of the uploaded proof. */
+  proofCheck        String?
   fromDiscovery     Boolean  @default(false)
   discoveryProfile  String?
   status            String   @default("pending")

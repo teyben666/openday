@@ -2,7 +2,13 @@ import { redirect } from 'next/navigation';
 import { db } from '@/lib/db';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { AdminShell } from '@/components/admin/admin-shell';
+import { AdminListFilters } from '@/components/admin/admin-list-filters';
 import { courses } from '@/data/courses';
+import {
+  buildInquiryWhere,
+  firstParam,
+  parseDateRange,
+} from '@/lib/admin-filters';
 
 function courseName(id: string | null) {
   if (!id) return '—';
@@ -27,20 +33,51 @@ function parseQuiz(quizResult: string | null) {
   }
 }
 
-export default async function AdminInquiriesPage() {
+type SearchParams = Promise<Record<string, string | string[] | undefined>>;
+
+export default async function AdminInquiriesPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
   if (!(await isAdminAuthenticated())) redirect('/admin/login');
 
+  const sp = await searchParams;
+  const q = firstParam(sp.q)?.trim() ?? '';
+  const programme = firstParam(sp.programme) || 'all';
+  const quiz = firstParam(sp.quiz) || 'all';
+  const range = parseDateRange(firstParam(sp.range));
+
+  const where = buildInquiryWhere({ q, programme, quiz, range });
+
   const inquiries = await db.inquiry.findMany({
+    where,
     orderBy: { createdAt: 'desc' },
     take: 200,
   });
+
+  const programmes = courses.map((c) => ({
+    id: c.id,
+    label: `${c.code} · ${c.name.zh}`,
+  }));
 
   return (
     <AdminShell>
       <h1 className="text-2xl font-bold mb-2">Inquiries / Leads</h1>
       <p className="text-sm text-muted-foreground mb-6">
-        Discovery lead captures and enquiry submissions ({inquiries.length})
+        Discovery lead captures and enquiry submissions
       </p>
+
+      <AdminListFilters
+        variant="inquiries"
+        basePath="/admin/inquiries"
+        q={q}
+        programme={programme}
+        quiz={quiz}
+        range={range}
+        programmes={programmes}
+        resultCount={inquiries.length}
+      />
 
       <div className="overflow-x-auto rounded-lg border bg-white">
         <table className="w-full text-sm">
@@ -57,7 +94,7 @@ export default async function AdminInquiriesPage() {
             {inquiries.length === 0 && (
               <tr>
                 <td colSpan={5} className="px-3 py-8 text-center text-muted-foreground">
-                  No inquiries yet
+                  No inquiries match these filters
                 </td>
               </tr>
             )}

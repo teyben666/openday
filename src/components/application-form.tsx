@@ -7,16 +7,31 @@ import { useLanguage } from '@/store/use-language';
 import { useDiscovery } from '@/store/use-discovery';
 import { courses } from '@/data/courses';
 import {
-  SUBJECT_OPTIONS,
+  CGPA_QUALIFICATIONS,
+  SECONDARY_ONLY_QUALIFICATIONS,
   gradesForQualification,
+  minSubjectRows,
   type QualificationKey,
 } from '@/data/entry-rules';
+import { OTHER_SUBJECT_ID, findSubject, subjectLabel, subjectsFor } from '@/data/subjects';
+import { SubjectPicker } from '@/components/subject-picker';
+import { ProgrammePicker } from '@/components/programme-picker';
 import {
   checkEntryEligibility,
   emptyGradeRows,
   formatGradesResultJson,
   type GradeRow,
 } from '@/lib/entry-check';
+import {
+  extractionToGradeRows,
+  verifyAgainstRows,
+  type TranscriptExtraction,
+} from '@/lib/transcript-extract';
+import {
+  TranscriptScanPanel,
+  type ScanError,
+  type ScanStatus,
+} from '@/components/transcript-scan-panel';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -47,6 +62,7 @@ import {
 } from 'lucide-react';
 import { buildWhatsAppUrl, buildApplyWhatsAppMessage, buildGeneralWhatsAppMessage, buildEntryHelpWhatsAppMessage } from '@/lib/contact';
 import { isValidPhone, phoneValidationMessage, sanitizePhoneInput } from '@/lib/phone';
+import { computeSubmitReview } from '@/lib/proof-review';
 
 const STEPS = 6;
 
@@ -59,6 +75,21 @@ const QUALIFICATIONS: QualificationKey[] = [
   'Diploma',
   'Foundation',
 ];
+
+function qualificationLabel(q: QualificationKey, lang: 'zh' | 'en'): string {
+  switch (q) {
+    case 'IGCSE':
+      return 'IGCSE / O-Level';
+    case 'UEC':
+      return lang === 'zh' ? 'UEC 独中统考' : 'UEC';
+    case 'Diploma':
+      return lang === 'zh' ? '文凭 Diploma' : 'Diploma';
+    case 'Foundation':
+      return lang === 'zh' ? '预科 Foundation' : 'Foundation';
+    default:
+      return q;
+  }
+}
 
 interface ApplicationFormProps {
   preSelectedProgramme?: string;
@@ -79,10 +110,25 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
   const [personal, setPersonal] = useState({ name: '', email: '', phone: '' });
   const [qualification, setQualification] = useState<QualificationKey | ''>('');
   const [gradeRows, setGradeRows] = useState<GradeRow[]>(() => emptyGradeRows(3));
+  const [cgpaInput, setCgpaInput] = useState('');
   const [programme, setProgramme] = useState('');
   const [documents, setDocuments] = useState({ notes: '', proofPath: '' });
   const [proofPreview, setProofPreview] = useState('');
   const [fromDiscovery, setFromDiscovery] = useState(false);
+
+  // --- AI transcript scanning (MiniCPM-V 4.6 via local Ollama) ---
+  const [proofFile, setProofFile] = useState<File | null>(null);
+  const [scanStatus, setScanStatus] = useState<ScanStatus>('idle');
+  const [scanError, setScanError] = useState<ScanError | null>(null);
+  const [extraction, setExtraction] = useState<TranscriptExtraction | null>(null);
+  const [scanMeta, setScanMeta] = useState<{
+    tookMs?: number;
+    model?: string;
+    pages?: number;
+  }>({});
+  const [scanApplied, setScanApplied] = useState(false);
+  /** True once the student changes grades after applying an AI reading. */
+  const [gradesEditedAfterScan, setGradesEditedAfterScan] = useState(false);
 
   useEffect(() => {
     const pre = preSelectedProgramme || selectedProgramme;
@@ -98,34 +144,48 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
         phone,
       });
       setPrefilledFromQuiz(true);
-
-      const hasCompleteLead =
-        Boolean(leadInfo.name?.trim()) &&
-        leadInfo.email?.includes('@') &&
-        isValidPhone(phone);
-      if (hasCompleteLead) setStep(2);
+      // Stay on step 1 so they still pick SPM / IGCSE / etc.
     }
   }, [preSelectedProgramme, selectedProgramme, result, leadInfo]);
 
   const selectedCourse = courses.find((c) => c.id === programme);
   const progress = (step / STEPS) * 100;
 
+  const isCgpaQual = qualification !== '' && CGPA_QUALIFICATIONS.includes(qualification);
+  const minRows = minSubjectRows(qualification);
+  const cgpa = cgpaInput.trim() === '' ? null : Number(cgpaInput);
+  const subjectOptions = useMemo(() => subjectsFor(qualification), [qualification]);
+  const recommendedIds = useMemo(
+    () => (result?.recommendations ?? []).slice(0, 5).map((r) => r.course.id),
+    [result],
+  );
+  const degreeBlocked =
+    selectedCourse?.type === 'bachelor' &&
+    qualification !== '' &&
+    SECONDARY_ONLY_QUALIFICATIONS.includes(qualification);
+
   const entryCheck = useMemo(() => {
     if (!programme || !qualification) return null;
-    return checkEntryEligibility(programme, qualification, gradeRows);
-  }, [programme, qualification, gradeRows]);
+    return checkEntryEligibility(programme, qualification, gradeRows, { cgpa });
+  }, [programme, qualification, gradeRows, cgpa]);
 
   const gradeOptions = qualification ? gradesForQualification(qualification) : [];
+
+  /** Cross-check what the student typed against what the AI read off the slip. */
+  const scanVerification = useMemo(() => {
+    if (!extraction) return null;
+    return verifyAgainstRows(extraction, gradeRows);
+  }, [extraction, gradeRows]);
 
   const entryHelpWaUrl = useMemo(() => {
     if (!selectedCourse || !entryCheck || entryCheck.ok) return null;
     const detail = t(
-      `Credit ${entryCheck.creditCount}/${entryCheck.minCredits}${
+      `${entryCheck.summary.zh}${
         entryCheck.missingSubjects.length
           ? `，缺少 ${entryCheck.missingSubjects.join('、')}`
           : ''
       }`,
-      `Credits ${entryCheck.creditCount}/${entryCheck.minCredits}${
+      `${entryCheck.summary.en}${
         entryCheck.missingSubjects.length
           ? `, missing ${entryCheck.missingSubjects.join(', ')}`
           : ''
@@ -145,15 +205,18 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
       return (
         personal.name.trim() !== '' &&
         personal.email.includes('@') &&
-        isValidPhone(personal.phone)
+        isValidPhone(personal.phone) &&
+        qualification !== ''
       );
     }
-    if (step === 2) return programme !== '';
-    if (step === 3) {
+    if (step === 2) return programme !== '' && !degreeBlocked;
+    // Step 3 = upload (optional). Step 4 = confirm grades.
+    if (step === 4) {
       if (!qualification) return false;
+      if (isCgpaQual) return Boolean(entryCheck?.ok);
       const filled = gradeRows.filter((r) => r.subjectId && r.grade);
-      if (filled.length < 3) return false;
-      if (filled.some((r) => r.subjectId === 'OTHER' && !r.subjectOther.trim())) return false;
+      if (filled.length < minRows) return false;
+      if (filled.some((r) => r.subjectId === OTHER_SUBJECT_ID && !r.subjectOther.trim())) return false;
       return Boolean(entryCheck?.ok);
     }
     if (step === 6) return Boolean(entryCheck?.ok);
@@ -161,6 +224,7 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
   }
 
   function updateRow(id: string, patch: Partial<GradeRow>) {
+    let changed = false;
     setGradeRows((rows) => {
       const current = rows.find((r) => r.id === id);
       if (!current) return rows;
@@ -189,8 +253,10 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
         }
       }
 
+      changed = true;
       return rows.map((r) => (r.id === id ? { ...r, ...patch } : r));
     });
+    if (changed && scanApplied) setGradesEditedAfterScan(true);
   }
 
   function addRow() {
@@ -198,6 +264,7 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
       toast.error(t('最多 10 科', 'Maximum 10 subjects'));
       return;
     }
+    if (scanApplied) setGradesEditedAfterScan(true);
     setGradeRows((rows) => [
       ...rows,
       {
@@ -210,10 +277,11 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
   }
 
   function removeRow(id: string) {
-    if (gradeRows.length <= 3) {
-      toast.error(t('至少保留 3 科', 'Keep at least 3 subjects'));
+    if (gradeRows.length <= minRows) {
+      toast.error(t(`至少保留 ${minRows} 科`, `Keep at least ${minRows} subjects`));
       return;
     }
+    if (scanApplied) setGradesEditedAfterScan(true);
     setGradeRows((rows) => rows.filter((r) => r.id !== id));
   }
 
@@ -243,11 +311,128 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
         setProofPreview('');
       }
       toast.success(t('成绩证明已上传', 'Proof uploaded'));
+
+      // Keep the original file around so the AI reader can scan it.
+      setProofFile(file);
+      setExtraction(null);
+      setScanError(null);
+      setScanApplied(false);
+      setGradesEditedAfterScan(false);
+      setScanStatus('idle');
+      void scanTranscript(file);
     } catch {
       toast.error(t('上传失败，请重试', 'Upload failed. Please try again.'));
     } finally {
       setUploading(false);
     }
+  }
+
+  /** Send the uploaded slip to MiniCPM-V 4.6 and store the structured reading. */
+  async function scanTranscript(file: File | null) {
+    const target = file || proofFile;
+    if (!target) return;
+
+    setScanStatus('scanning');
+    setScanError(null);
+    setScanApplied(false);
+    setGradesEditedAfterScan(false);
+
+    try {
+      const form = new FormData();
+      form.append('file', target);
+      if (qualification) form.append('qualification', qualification);
+
+      const res = await fetch('/api/ocr/transcript', { method: 'POST', body: form });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        setScanStatus('error');
+        setScanError({
+          code: data.code || 'server_error',
+          message:
+            data.code === 'unreachable'
+              ? t('无法连接本地 AI 服务 (Ollama)', 'Cannot reach the local AI service (Ollama)')
+              : data.code === 'model_missing'
+                ? t('AI 模型尚未安装', 'AI model is not installed')
+                : data.code === 'timeout'
+                  ? t('AI 读取超时', 'AI reading timed out')
+                    : data.code === 'no_subjects'
+                      ? t('无法从图片读取成绩', 'Could not read any grades from that image')
+                      : data.code === 'repeat_loop'
+                        ? t('AI 无法可靠读取这张图片', 'The AI could not read this image reliably')
+                        : data.code === 'not_vision' || data.code === 'out_of_memory'
+                          ? t(
+                              'AI 服务设置有误，请联系工作人员',
+                              'The AI service is misconfigured — please notify staff',
+                            )
+                          : data.code === 'pdf_unsupported'
+                            ? t('此服务器无法处理 PDF', 'This server cannot process PDFs')
+                            : t('扫描失败', 'Scan failed'),
+          hint: data.hint,
+        });
+        return;
+      }
+
+      setExtraction(data.extraction as TranscriptExtraction);
+      setScanMeta({
+        tookMs: data.meta?.tookMs,
+        model: data.meta?.model,
+        pages: data.meta?.pages,
+      });
+      setScanStatus('done');
+
+      const found = data.meta?.subjectCount ?? 0;
+      toast.success(
+        t(`AI 读取到 ${found} 科成绩`, `AI read ${found} subject${found === 1 ? '' : 's'}`),
+      );
+    } catch {
+      setScanStatus('error');
+      setScanError({
+        code: 'network',
+        message: t('扫描失败，请重试', 'Scan failed, please try again'),
+      });
+    }
+  }
+
+  /** Copy the AI reading into the grade table (step 4). */
+  function applyExtraction() {
+    if (!extraction) return;
+
+    const rows = extractionToGradeRows(extraction);
+    if (!rows.length) {
+      toast.error(t('没有可填入的成绩', 'No usable grades to apply'));
+      return;
+    }
+
+    const floor = Math.max(minRows, 1);
+    const padded =
+      rows.length >= floor
+        ? rows
+        : [...rows, ...emptyGradeRows(floor - rows.length)];
+
+    setGradeRows(padded.slice(0, 10));
+
+    if (!qualification && extraction.qualification) {
+      setQualification(extraction.qualification);
+    }
+
+    setScanApplied(true);
+    setGradesEditedAfterScan(false);
+    toast.success(
+      t('已填入成绩，请核对', 'Grades applied — please verify them'),
+    );
+  }
+
+  function goNext() {
+    if (step === 1 && !isValidPhone(personal.phone)) {
+      toast.error(phoneValidationMessage(lang));
+      return;
+    }
+    // Leaving upload → grades: auto-fill from AI when available.
+    if (step === 3 && extraction && !scanApplied) {
+      applyExtraction();
+    }
+    setStep((s) => s + 1);
   }
 
   async function handleSubmit() {
@@ -256,25 +441,69 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
       setStep(1);
       return;
     }
+    if (!qualification) {
+      setStep(1);
+      return;
+    }
     if (!programme) {
       setStep(2);
       return;
     }
-    if (!qualification || !entryCheck) {
-      setStep(3);
+    if (!entryCheck) {
+      setStep(4);
       return;
     }
     if (!entryCheck.ok) {
       toast.error(
         t('成绩未达入学门槛，请调整科目成绩后再提交', 'Results do not meet entry requirements. Please update your grades before submitting.'),
       );
-      setStep(3);
+      setStep(4);
       return;
     }
 
     setLoading(true);
     try {
-      const gradesResult = formatGradesResultJson(qualification, gradeRows, entryCheck);
+      const gradesResult = formatGradesResultJson(
+        qualification,
+        isCgpaQual ? [] : gradeRows,
+        entryCheck,
+        { cgpa: isCgpaQual ? cgpa : null },
+      );
+      const review = computeSubmitReview({
+        hasProof: Boolean(documents.proofPath),
+        gradesEditedAfterScan,
+        verification: scanVerification?.checked
+          ? {
+              checked: true,
+              matches: scanVerification.matches,
+              mismatches: scanVerification.mismatches,
+              unverified: scanVerification.unverified,
+            }
+          : null,
+      });
+
+      const proofCheck = JSON.stringify({
+        model: scanMeta.model,
+        qualification: extraction?.qualification ?? qualification,
+        candidateName: extraction?.candidateName,
+        examYear: extraction?.examYear,
+        matches: scanVerification?.matches ?? 0,
+        mismatches: scanVerification?.mismatches ?? 0,
+        unverified: scanVerification?.unverified ?? 0,
+        gradesEditedAfterScan,
+        reviewStatus: review.reviewStatus,
+        needsManualReview: review.needsManualReview,
+        scannedBy: extraction ? 'student' : undefined,
+        items: scanVerification?.checked
+          ? scanVerification.items.map((i) => ({
+              subject: i.label.en,
+              form: i.formGrade,
+              proof: i.proofGrade,
+              kind: i.kind,
+            }))
+          : [],
+      });
+
       const res = await fetch('/api/application', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -287,6 +516,7 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
           programme,
           documents: documents.notes,
           proofPath: documents.proofPath || undefined,
+          proofCheck,
           fromDiscovery,
           discoveryProfile: result ? JSON.stringify(result.final) : undefined,
           entryCheckOk: entryCheck.ok,
@@ -352,8 +582,8 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
           {prefilledFromQuiz && (
             <p className="mt-3 text-xs text-emerald-700 dark:text-emerald-400">
               {t(
-                '已根据 Course Discovery 测验信息自动填写姓名、邮箱与电话，可返回第一步修改。',
-                'Name, email and phone were pre-filled from your Course Discovery quiz. You can go back to step 1 to edit.',
+                '已根据 Course Discovery 测验信息自动填写姓名、邮箱与电话，请选择学历后继续。',
+                'Name, email and phone were pre-filled from your Course Discovery quiz. Choose your qualification to continue.',
               )}
             </p>
           )}
@@ -369,10 +599,10 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">
-                  {step === 1 && t('个人资料', 'Personal Information')}
+                  {step === 1 && t('基本资料', 'Basic Information')}
                   {step === 2 && t('选择课程', 'Programme Selection')}
-                  {step === 3 && t('学术背景与成绩', 'Academic Background & Results')}
-                  {step === 4 && t('成绩证明上传', 'Upload Result Proof')}
+                  {step === 3 && t('成绩证明上传', 'Upload Result Proof')}
+                  {step === 4 && t('核对成绩', 'Confirm Results')}
                   {step === 5 && t('确认申请', 'Review Application')}
                   {step === 6 && t('条件预检', 'Condition Pre-check')}
                 </CardTitle>
@@ -411,6 +641,44 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
                         {t('仅数字，8–15 位', 'Digits only, 8–15 characters')}
                       </p>
                     </div>
+                    <div className="space-y-2">
+                      <Label>{t('最高学历 / 考试', 'Highest Qualification / Exam')} *</Label>
+                      <Select
+                        value={qualification || ''}
+                        onValueChange={(v) => {
+                          const next = v as QualificationKey;
+                          if (next === qualification) return;
+                          setQualification(next);
+                          // Each qualification has its own subject list and grade scale.
+                          setGradeRows(emptyGradeRows(Math.max(minSubjectRows(next), 3)));
+                          setCgpaInput('');
+                          setScanApplied(false);
+                          setGradesEditedAfterScan(false);
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder={t(
+                              '例如 SPM、IGCSE、UEC…',
+                              'e.g. SPM, IGCSE, UEC…',
+                            )}
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {QUALIFICATIONS.map((q) => (
+                            <SelectItem key={q} value={q}>
+                              {qualificationLabel(q, lang)}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <p className="text-xs text-muted-foreground">
+                        {t(
+                          '请选择你持有或正在考的成绩类型，方便 AI 正确读取成绩单。',
+                          'Select the exam you sat (or are sitting) so the AI can read your slip correctly.',
+                        )}
+                      </p>
+                    </div>
                   </>
                 )}
 
@@ -418,18 +686,23 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
                   <div className="space-y-3">
                     <div className="space-y-2">
                       <Label>{t('申请课程', 'Programme')} *</Label>
-                      <Select value={programme || ''} onValueChange={setProgramme}>
-                        <SelectTrigger>
-                          <SelectValue placeholder={t('选择课程...', 'Select programme...')} />
-                        </SelectTrigger>
-                        <SelectContent className="max-h-64">
-                          {courses.map((c) => (
-                            <SelectItem key={c.id} value={c.id}>
-                              {lang === 'zh' ? c.name.zh : c.name.en}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <ProgrammePicker
+                        value={programme}
+                        onChange={setProgramme}
+                        lang={lang}
+                        recommendedIds={recommendedIds}
+                        isUnavailable={(c) =>
+                          c.type === 'bachelor' &&
+                          qualification !== '' &&
+                          SECONDARY_ONLY_QUALIFICATIONS.includes(qualification)
+                        }
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        {t(
+                          '可输入课程名称、代码或学系搜索，也可按学士 / 文凭 / 预科筛选。',
+                          'Search by name, code or department, or filter by Degree / Diploma / Foundation.',
+                        )}
+                      </p>
                     </div>
                     {selectedCourse && (
                       <div className="rounded-lg border bg-muted/30 p-3 text-xs text-muted-foreground space-y-1">
@@ -444,6 +717,23 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
                           .map((line) => (
                             <p key={line}>• {line}</p>
                           ))}
+                      </div>
+                    )}
+                    {degreeBlocked && (
+                      <div className="rounded-lg border border-amber-200 bg-amber-50/70 p-3 text-xs text-amber-900 dark:bg-amber-950/30 dark:text-amber-200 space-y-1">
+                        <p className="flex items-center gap-1.5 font-medium text-sm">
+                          <AlertTriangle className="h-4 w-4" />
+                          {t(
+                            `${qualification} 不能直接报读学士学位`,
+                            `${qualification} alone does not qualify for a bachelor degree`,
+                          )}
+                        </p>
+                        <p>
+                          {t(
+                            '学士学位需持有 STPM、UEC（5 科 B）、A-Level，或预科 / 文凭（CGPA 2.0 以上）。建议改报预科或相关文凭课程。',
+                            'Bachelor degrees need STPM, UEC (5 Bs), A-Level, or a Foundation / Diploma (CGPA 2.0+). Consider a Foundation or related Diploma instead.',
+                          )}
+                        </p>
                       </div>
                     )}
                     <label className="flex items-center gap-2 text-sm cursor-pointer">
@@ -462,185 +752,6 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
 
                 {step === 3 && (
                   <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label>{t('最高学历', 'Highest Qualification')} *</Label>
-                      <Select
-                        value={qualification || ''}
-                        onValueChange={(v) => {
-                          setQualification(v as QualificationKey);
-                          setGradeRows((rows) =>
-                            rows.map((r) => ({ ...r, grade: '' })),
-                          );
-                        }}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder={t('请选择', 'Select...')} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {QUALIFICATIONS.map((q) => (
-                            <SelectItem key={q} value={q}>
-                              {q === 'IGCSE' ? 'IGCSE / O-Level' : q}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between gap-2">
-                        <Label>{t('成绩结果', 'Academic Results')} *</Label>
-                        <Button type="button" variant="outline" size="sm" onClick={addRow}>
-                          <Plus className="h-3.5 w-3.5 mr-1" />
-                          {t('添加科目', 'Add subject')}
-                        </Button>
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        {t(
-                          '请至少填写 3 科，且同一科目不能重复。有数学要求的课程会自动检查。',
-                          'Enter at least 3 subjects. Each subject can only be added once. Programmes that require Math are checked automatically.',
-                        )}
-                      </p>
-
-                      <div className="overflow-x-auto rounded-lg border">
-                        <table className="w-full text-sm">
-                          <thead className="bg-muted/50 text-left">
-                            <tr>
-                              <th className="px-2 py-2 font-medium w-8">#</th>
-                              <th className="px-2 py-2 font-medium">{t('科目', 'Subject')}</th>
-                              <th className="px-2 py-2 font-medium w-28">{t('成绩', 'Grade')}</th>
-                              <th className="px-2 py-2 w-10" />
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {gradeRows.map((row, idx) => (
-                              <tr key={row.id} className="border-t align-top">
-                                <td className="px-2 py-2 text-muted-foreground">{idx + 1}</td>
-                                <td className="px-2 py-2 space-y-1.5">
-                                  <Select
-                                    value={row.subjectId || ''}
-                                    onValueChange={(v) =>
-                                      updateRow(row.id, { subjectId: v, subjectOther: '' })
-                                    }
-                                  >
-                                    <SelectTrigger className="h-9">
-                                      <SelectValue placeholder={t('选择科目', 'Subject')} />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      {SUBJECT_OPTIONS.map((s) => {
-                                        const taken =
-                                          s.id !== 'OTHER' &&
-                                          gradeRows.some(
-                                            (r) => r.id !== row.id && r.subjectId === s.id,
-                                          );
-                                        return (
-                                          <SelectItem key={s.id} value={s.id} disabled={taken}>
-                                            {lang === 'zh' ? s.zh : s.en}
-                                            {taken ? t('（已填）', ' (added)') : ''}
-                                          </SelectItem>
-                                        );
-                                      })}
-                                    </SelectContent>
-                                  </Select>
-                                  {row.subjectId === 'OTHER' && (
-                                    <Input
-                                      className="h-8"
-                                      placeholder={t('科目名称', 'Subject name')}
-                                      value={row.subjectOther}
-                                      onChange={(e) =>
-                                        updateRow(row.id, { subjectOther: e.target.value })
-                                      }
-                                    />
-                                  )}
-                                </td>
-                                <td className="px-2 py-2">
-                                  <Select
-                                    value={row.grade || ''}
-                                    onValueChange={(v) => updateRow(row.id, { grade: v })}
-                                    disabled={!qualification}
-                                  >
-                                    <SelectTrigger className="h-9">
-                                      <SelectValue placeholder="—" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      {gradeOptions.map((g) => (
-                                        <SelectItem key={g} value={g}>
-                                          {g}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                </td>
-                                <td className="px-2 py-2">
-                                  <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8"
-                                    onClick={() => removeRow(row.id)}
-                                    disabled={gradeRows.length <= 3}
-                                  >
-                                    <Trash2 className="h-3.5 w-3.5" />
-                                  </Button>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-
-                    {entryCheck && (
-                      <div
-                        className={`rounded-lg border p-3 text-sm space-y-1.5 ${
-                          entryCheck.ok
-                            ? 'border-emerald-200 bg-emerald-50/60 dark:bg-emerald-950/20'
-                            : 'border-amber-200 bg-amber-50/60 dark:bg-amber-950/20'
-                        }`}
-                      >
-                        <p className="font-medium flex items-center gap-1.5">
-                          {entryCheck.ok ? (
-                            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                          ) : (
-                            <AlertTriangle className="h-4 w-4 text-amber-600" />
-                          )}
-                          {t(
-                            `Credit / 达标：${entryCheck.creditCount} / 需 ${entryCheck.minCredits}`,
-                            `Credits: ${entryCheck.creditCount} / need ${entryCheck.minCredits}`,
-                          )}
-                        </p>
-                        {entryCheck.messages.map((m) => (
-                          <p key={m.en} className="text-xs text-muted-foreground">
-                            {lang === 'zh' ? m.zh : m.en}
-                          </p>
-                        ))}
-                        {!entryCheck.ok && entryHelpWaUrl && (
-                          <div className="pt-2">
-                            <p className="text-xs text-muted-foreground mb-2">
-                              {t(
-                                '暂时无法线上提交？可联系招生顾问一对一协助评估其他方案。',
-                                'Unable to submit online? Chat with admissions for one-to-one advice on other options.',
-                              )}
-                            </p>
-                            <Button
-                              type="button"
-                              size="sm"
-                              className="w-full sm:w-auto bg-[#25D366] hover:bg-[#1fb855] text-white"
-                              asChild
-                            >
-                              <a href={entryHelpWaUrl} target="_blank" rel="noopener noreferrer">
-                                <MessageCircle className="mr-1.5 h-4 w-4" />
-                                {t('WhatsApp 联系客服', 'Contact advisor on WhatsApp')}
-                              </a>
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {step === 4 && (
-                  <div className="space-y-4">
                     <div className="rounded-lg border border-dashed p-4 space-y-3">
                       <Label className="flex items-center gap-2">
                         <ImageIcon className="h-4 w-4" />
@@ -648,8 +759,8 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
                       </Label>
                       <p className="text-xs text-muted-foreground">
                         {t(
-                          '上传成绩单照片或 PDF 作为证明（选填，建议上传便于审核）',
-                          'Upload transcript photo or PDF as proof (optional, recommended)',
+                          '建议先上传成绩单，下一步再核对 AI 填入的成绩。也可跳过，下一步手填。',
+                          'Upload your slip first — AI fills grades for you to confirm next. Or skip and enter grades manually.',
                         )}
                       </p>
                       <input
@@ -688,6 +799,20 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
                         />
                       )}
                     </div>
+
+                    <TranscriptScanPanel
+                      status={scanStatus}
+                      extraction={extraction}
+                      verification={scanVerification}
+                      error={scanError}
+                      tookMs={scanMeta.tookMs}
+                      modelName={scanMeta.model}
+                      pages={scanMeta.pages}
+                      hasFile={Boolean(proofFile)}
+                      onScan={() => void scanTranscript(null)}
+                      onApply={applyExtraction}
+                      applied={scanApplied}
+                    />
                     <div className="space-y-2">
                       <Label className="flex items-center gap-2">
                         <FileText className="h-4 w-4" />
@@ -700,6 +825,184 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
                         onChange={(e) => setDocuments({ ...documents, notes: e.target.value })}
                       />
                     </div>
+                  </div>
+                )}
+
+                {step === 4 && (
+                  <div className="space-y-4">
+                    <div className="rounded-lg border bg-muted/30 px-3 py-2 text-sm">
+                      <span className="text-muted-foreground">{t('学历', 'Qualification')}: </span>
+                      <span className="font-medium">
+                        {qualification ? qualificationLabel(qualification, lang) : '—'}
+                      </span>
+                      {gradesEditedAfterScan && (
+                        <span className="ml-2 text-xs text-amber-700">
+                          {t('已手改 · 提交后需人工核对', 'Edited · staff will review')}
+                        </span>
+                      )}
+                    </div>
+
+                    {isCgpaQual ? (
+                      <div className="space-y-2">
+                        <Label htmlFor="cgpa">{t('毕业 / 目前 CGPA', 'Final / current CGPA')} *</Label>
+                        <Input
+                          id="cgpa"
+                          type="number"
+                          inputMode="decimal"
+                          step="0.01"
+                          min={0}
+                          max={4}
+                          placeholder={t('例如 3.25', 'e.g. 3.25')}
+                          value={cgpaInput}
+                          onChange={(e) => setCgpaInput(e.target.value)}
+                          className="max-w-40"
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          {t(
+                            '按 4.00 制填写。请在上一步上传成绩单，招生团队会核对。',
+                            'On a 4.00 scale. Upload your transcript in the previous step so admissions can verify it.',
+                          )}
+                        </p>
+                      </div>
+                    ) : (
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <Label>{t('成绩结果', 'Academic Results')} *</Label>
+                        <Button type="button" variant="outline" size="sm" onClick={addRow}>
+                          <Plus className="h-3.5 w-3.5 mr-1" />
+                          {t('添加科目', 'Add subject')}
+                        </Button>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {t(
+                          `请核对 AI 填入的成绩，可手改。可输入科目名称或代码搜索；至少 ${minRows} 科，同一科目不能重复。`,
+                          `Confirm AI-filled grades (you may edit). Search by subject name or code; enter at least ${minRows} subjects, each only once.`,
+                        )}
+                      </p>
+
+                      <div className="overflow-x-auto rounded-lg border">
+                        <table className="w-full text-sm">
+                          <thead className="bg-muted/50 text-left">
+                            <tr>
+                              <th className="px-2 py-2 font-medium w-8">#</th>
+                              <th className="px-2 py-2 font-medium">{t('科目', 'Subject')}</th>
+                              <th className="px-2 py-2 font-medium w-28">{t('成绩', 'Grade')}</th>
+                              <th className="px-2 py-2 w-10" />
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {gradeRows.map((row, idx) => (
+                              <tr key={row.id} className="border-t align-top">
+                                <td className="px-2 py-2 text-muted-foreground">{idx + 1}</td>
+                                <td className="px-2 py-2 space-y-1.5">
+                                  <SubjectPicker
+                                    options={subjectOptions}
+                                    value={row.subjectId}
+                                    lang={lang}
+                                    takenIds={
+                                      new Set(
+                                        gradeRows
+                                          .filter((r) => r.id !== row.id && r.subjectId)
+                                          .map((r) => r.subjectId),
+                                      )
+                                    }
+                                    onChange={(v) =>
+                                      updateRow(row.id, { subjectId: v, subjectOther: '' })
+                                    }
+                                  />
+                                  {row.subjectId === OTHER_SUBJECT_ID && (
+                                    <Input
+                                      className="h-8"
+                                      placeholder={t('科目名称', 'Subject name')}
+                                      value={row.subjectOther}
+                                      onChange={(e) =>
+                                        updateRow(row.id, { subjectOther: e.target.value })
+                                      }
+                                    />
+                                  )}
+                                </td>
+                                <td className="px-2 py-2">
+                                  <Select
+                                    value={row.grade || ''}
+                                    onValueChange={(v) => updateRow(row.id, { grade: v })}
+                                    disabled={!qualification}
+                                  >
+                                    <SelectTrigger className="h-9">
+                                      <SelectValue placeholder="—" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {gradeOptions.map((g) => (
+                                        <SelectItem key={g} value={g}>
+                                          {g}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </td>
+                                <td className="px-2 py-2">
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8"
+                                    onClick={() => removeRow(row.id)}
+                                    disabled={gradeRows.length <= minRows}
+                                  >
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                  </Button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    )}
+
+                    {entryCheck && (
+                      <div
+                        className={`rounded-lg border p-3 text-sm space-y-1.5 ${
+                          entryCheck.ok
+                            ? 'border-emerald-200 bg-emerald-50/60 dark:bg-emerald-950/20'
+                            : 'border-amber-200 bg-amber-50/60 dark:bg-amber-950/20'
+                        }`}
+                      >
+                        <p className="font-medium flex items-center gap-1.5">
+                          {entryCheck.ok ? (
+                            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                          ) : (
+                            <AlertTriangle className="h-4 w-4 text-amber-600" />
+                          )}
+                          {lang === 'zh' ? entryCheck.summary.zh : entryCheck.summary.en}
+                        </p>
+                        {entryCheck.messages.map((m) => (
+                          <p key={m.en} className="text-xs text-muted-foreground">
+                            {lang === 'zh' ? m.zh : m.en}
+                          </p>
+                        ))}
+                        {!entryCheck.ok && entryHelpWaUrl && (
+                          <div className="pt-2">
+                            <p className="text-xs text-muted-foreground mb-2">
+                              {t(
+                                '暂时无法线上提交？可联系招生顾问一对一协助评估其他方案。',
+                                'Unable to submit online? Chat with admissions for one-to-one advice on other options.',
+                              )}
+                            </p>
+                            <Button
+                              type="button"
+                              size="sm"
+                              className="w-full sm:w-auto bg-[#25D366] hover:bg-[#1fb855] text-white"
+                              asChild
+                            >
+                              <a href={entryHelpWaUrl} target="_blank" rel="noopener noreferrer">
+                                <MessageCircle className="mr-1.5 h-4 w-4" />
+                                {t('WhatsApp 联系客服', 'Contact advisor on WhatsApp')}
+                              </a>
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -729,28 +1032,37 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
                     </div>
                     <div>
                       <dt className="text-muted-foreground">{t('学历', 'Qualification')}</dt>
-                      <dd className="font-medium">{qualification || '—'}</dd>
+                      <dd className="font-medium">
+                        {qualification ? qualificationLabel(qualification, lang) : '—'}
+                      </dd>
                     </div>
                     <div>
                       <dt className="text-muted-foreground mb-1">{t('成绩结果', 'Results')}</dt>
                       <dd>
-                        <ul className="space-y-0.5">
-                          {gradeRows
-                            .filter((r) => r.subjectId && r.grade)
-                            .map((r) => {
-                              const sub =
-                                r.subjectId === 'OTHER'
-                                  ? r.subjectOther
-                                  : SUBJECT_OPTIONS.find((s) => s.id === r.subjectId)?.[
-                                      lang === 'zh' ? 'zh' : 'en'
-                                    ] || r.subjectId;
-                              return (
-                                <li key={r.id}>
-                                  {sub}: <span className="font-medium">{r.grade}</span>
-                                </li>
-                              );
-                            })}
-                        </ul>
+                        {isCgpaQual ? (
+                          <span className="font-medium">
+                            CGPA {cgpa !== null && Number.isFinite(cgpa) ? cgpa.toFixed(2) : '—'}
+                          </span>
+                        ) : (
+                          <ul className="space-y-0.5">
+                            {gradeRows
+                              .filter((r) => r.subjectId && r.grade)
+                              .map((r) => {
+                                const option = findSubject(r.subjectId);
+                                const sub =
+                                  r.subjectId === OTHER_SUBJECT_ID
+                                    ? r.subjectOther
+                                    : option
+                                      ? subjectLabel(option, lang)
+                                      : r.subjectId;
+                                return (
+                                  <li key={r.id}>
+                                    {sub}: <span className="font-medium">{r.grade}</span>
+                                  </li>
+                                );
+                              })}
+                          </ul>
+                        )}
                       </dd>
                     </div>
                     <div>
@@ -761,6 +1073,47 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
                           : t('未上传（可选）', 'Not uploaded (optional)')}
                       </dd>
                     </div>
+                    {scanVerification?.checked && (
+                      <div>
+                        <dt className="text-muted-foreground">
+                          {t('AI 证明核对', 'AI proof check')}
+                        </dt>
+                        <dd
+                          className={`font-medium ${
+                            scanVerification.mismatches || gradesEditedAfterScan
+                              ? 'text-amber-600'
+                              : 'text-emerald-600'
+                          }`}
+                        >
+                          {gradesEditedAfterScan
+                            ? t(
+                                '成绩有手改，提交后将提示招生人工核对',
+                                'Grades were edited — staff will be asked to review',
+                              )
+                            : scanVerification.mismatches
+                              ? t(
+                                  `${scanVerification.mismatches} 科与成绩单不一致`,
+                                  `${scanVerification.mismatches} grade(s) differ from the slip`,
+                                )
+                              : t(
+                                  `${scanVerification.matches} 科与成绩单一致`,
+                                  `${scanVerification.matches} grade(s) match the slip`,
+                                )}
+                        </dd>
+                      </div>
+                    )}
+                    {!scanVerification?.checked && (
+                      <div>
+                        <dt className="text-muted-foreground">
+                          {t('AI 证明核对', 'AI proof check')}
+                        </dt>
+                        <dd className="font-medium text-muted-foreground">
+                          {documents.proofPath
+                            ? t('已上传但未完成 AI 核对', 'Uploaded but not AI-verified')
+                            : t('未上传成绩单（手填）', 'No proof uploaded (manual entry)')}
+                        </dd>
+                      </div>
+                    )}
                   </dl>
                 )}
 
@@ -784,10 +1137,7 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
                       {t('学费', 'Tuition')}: RM {selectedCourse.tuition.toLocaleString()}
                     </div>
                     <div>
-                      {t(
-                        `Credit / 达标：${entryCheck.creditCount} / ${entryCheck.minCredits}`,
-                        `Credits: ${entryCheck.creditCount} / ${entryCheck.minCredits}`,
-                      )}
+                      {lang === 'zh' ? entryCheck.summary.zh : entryCheck.summary.en}
                     </div>
                     {entryCheck.messages.map((m) => (
                       <p key={m.en} className="text-xs text-muted-foreground">
@@ -827,15 +1177,12 @@ export function ApplicationForm({ preSelectedProgramme }: ApplicationFormProps) 
           {step < STEPS ? (
             <Button
               className="bg-emerald-600 hover:bg-emerald-700"
-              disabled={!canNext()}
-              onClick={() => {
-                if (step === 1 && !isValidPhone(personal.phone)) {
-                  toast.error(phoneValidationMessage(lang));
-                  return;
-                }
-                setStep((s) => s + 1);
-              }}
+              disabled={!canNext() || (step === 3 && scanStatus === 'scanning')}
+              onClick={goNext}
             >
+              {step === 3 && scanStatus === 'scanning' ? (
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              ) : null}
               {t('下一步', 'Next')}
               <ChevronRight className="h-4 w-4 ml-1" />
             </Button>

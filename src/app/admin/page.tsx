@@ -26,6 +26,20 @@ export default async function AdminDashboardPage() {
   return (
     <AdminShell>
       <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+
+      <Link
+        href="/admin/find"
+        className="mb-6 flex items-center justify-between gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900 transition-colors hover:bg-emerald-100"
+      >
+        <div>
+          <p className="font-semibold">Open Day Find</p>
+          <p className="text-sm text-emerald-800/80">
+            Quick search by phone, name, or reference ID
+          </p>
+        </div>
+        <span className="text-sm font-medium">Open →</span>
+      </Link>
+
       <div className="grid gap-4 sm:grid-cols-3 mb-8">
         <Card>
           <CardHeader className="pb-2">
@@ -48,7 +62,12 @@ export default async function AdminDashboardPage() {
             <CardTitle className="text-sm font-medium text-muted-foreground">Pending apps</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-amber-600">{pendingApps}</p>
+            <Link
+              href="/admin/applications?status=pending"
+              className="text-3xl font-bold text-amber-600 hover:underline"
+            >
+              {pendingApps}
+            </Link>
           </CardContent>
         </Card>
       </div>

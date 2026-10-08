@@ -11,6 +11,7 @@ import { quizQuestions, partLabels, type QuizPart } from '@/data/quiz';
 import { useLanguage } from '@/store/use-language';
 import { useDiscovery } from '@/store/use-discovery';
 import { DiscoveryLeadGate } from '@/components/discovery-lead-gate';
+import { DiscoveryMarqueeBg } from '@/components/discovery-marquee-bg';
 import { ChevronRight, Sparkles, CheckCircle2 } from 'lucide-react';
 
 const slideVariants = {
@@ -110,8 +111,9 @@ export default function CourseQuiz() {
 
   if (!started) {
     return (
-      <section className="w-full py-16 sm:py-24">
-        <div className="mx-auto max-w-2xl px-4 sm:px-6 text-center">
+      <section className="relative w-full min-h-[70vh] overflow-hidden py-16 sm:py-24">
+        <DiscoveryMarqueeBg />
+        <div className="relative z-10 mx-auto max-w-2xl px-4 sm:px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
             <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-900/40">
               <Sparkles className="h-8 w-8 text-emerald-600" />
@@ -145,8 +147,9 @@ export default function CourseQuiz() {
   }
 
   return (
-    <section className="w-full py-12 sm:py-16">
-      <div className="mx-auto max-w-2xl px-4 sm:px-6">
+    <section className="relative w-full min-h-[70vh] overflow-hidden py-12 sm:py-16">
+      <DiscoveryMarqueeBg />
+      <div className="relative z-10 mx-auto max-w-2xl px-4 sm:px-6">
         <div className="mb-2 text-center">
           <Badge variant="outline" className="text-emerald-700 border-emerald-300">
             {t(
@@ -166,11 +169,18 @@ export default function CourseQuiz() {
 
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div key={currentQ} custom={direction} variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.35 }}>
-            <Card className="border-0 shadow-lg">
+            <Card className="glass-panel border-0 shadow-none rounded-[1.35rem] !bg-transparent">
               <CardContent className="p-6 sm:p-8">
-                <h2 className="text-lg sm:text-xl font-bold mb-6 leading-relaxed">
+                <h2 className="text-lg sm:text-xl font-bold mb-4 leading-relaxed text-foreground">
                   {lang === 'zh' ? question.question.zh : question.question.en}
                 </h2>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/quiz/q${question.id}.jpg`}
+                  alt=""
+                  className="mb-6 w-full rounded-xl border border-white/35 object-cover"
+                  draggable={false}
+                />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {question.options.map((opt, idx) => (
                     <motion.button
@@ -180,15 +190,13 @@ export default function CourseQuiz() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       className={[
-                        'relative w-full text-left rounded-xl p-4 border-2 transition-all cursor-pointer',
-                        answers[currentQ] === idx
-                          ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30'
-                          : 'border-gray-200 dark:border-gray-700 hover:border-teal-300',
+                        'relative w-full text-left rounded-xl p-4 transition-all cursor-pointer',
+                        answers[currentQ] === idx ? 'glass-option-selected' : 'glass-option',
                       ].join(' ')}
                     >
                       <div className="flex gap-3">
                         <span className="text-2xl">{opt.emoji}</span>
-                        <span className="text-sm font-medium">{lang === 'zh' ? opt.text.zh : opt.text.en}</span>
+                        <span className="text-sm font-medium text-foreground">{lang === 'zh' ? opt.text.zh : opt.text.en}</span>
                       </div>
                       {answers[currentQ] === idx && (
                         <CheckCircle2 className="absolute top-2 right-2 h-5 w-5 text-emerald-500" />

@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/store/use-language';
 import { useComparison } from '@/store/use-comparison';
-import { useShortlist } from '@/store/use-discovery';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -15,9 +15,12 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
-import { GraduationCap, Menu, Globe, MessageCircle } from 'lucide-react';
+import { Menu, Globe, MessageCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { buildWhatsAppUrl, buildGeneralWhatsAppMessage } from '@/lib/contact';
+
+const BRAND_EN = 'New Era University College';
+const BRAND_ZH = '新纪元大学学院';
 
 const navLinks = [
   { label: { zh: '首页', en: 'Home' }, href: '/' },
@@ -27,10 +30,25 @@ const navLinks = [
   { label: { zh: '咨询', en: 'Contact' }, href: '/contact', whatsapp: true },
 ] as const;
 
+function BrandMark({ compact = false }: { compact?: boolean }) {
+  return (
+    <Image
+      src="/neuc-logo-banner.png"
+      alt={`${BRAND_EN} ${BRAND_ZH}`}
+      width={280}
+      height={72}
+      className={cn(
+        'object-contain object-left shrink-0',
+        compact ? 'h-[4.5rem] w-auto max-w-[400px]' : 'h-20 w-auto max-w-[440px] md:h-[5.5rem] md:max-w-[520px]',
+      )}
+      priority
+    />
+  );
+}
+
 export function Navbar() {
   const { lang, toggleLang } = useLanguage();
   const { selectedIds } = useComparison();
-  const { ids: shortlistIds } = useShortlist();
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -50,23 +68,26 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 h-16 transition-all duration-300 border-b',
+        'fixed top-0 left-0 right-0 z-50 h-24 transition-all duration-300 border-b',
         solid
-          ? 'bg-white/90 dark:bg-gray-950/90 backdrop-blur-md border-gray-200/60 dark:border-gray-800/60 shadow-sm'
-          : 'bg-transparent border-transparent',
+          ? 'border-white/25 bg-white/10 shadow-none backdrop-blur-xl supports-[backdrop-filter]:bg-white/10'
+          : 'border-transparent bg-transparent',
       )}
     >
-      <nav className="max-w-7xl mx-auto h-full px-4 md:px-8 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 group">
-          <GraduationCap className="h-6 w-6 text-emerald-600 transition-transform group-hover:scale-110" />
-          <span className={cn('font-bold text-lg', solid ? 'text-emerald-700' : 'text-emerald-700 dark:text-emerald-400')}>
-            {lang === 'zh' ? '新纪元' : 'NEUC'}
-          </span>
+      <nav className="max-w-7xl mx-auto h-full px-4 md:px-8 flex items-center justify-between gap-3">
+        <Link href="/" className="flex min-w-0 items-center gap-2.5 group">
+          <BrandMark />
         </Link>
 
-        <div className="hidden lg:flex items-center gap-0.5">
+        <div className="hidden lg:flex items-center gap-0.5 shrink-0">
           {navLinks.map((link) => (
-            <Button key={link.href} variant="ghost" size="sm" asChild className="text-sm font-medium px-2.5">
+            <Button
+              key={link.href}
+              variant="ghost"
+              size="sm"
+              asChild
+              className="text-sm font-medium px-2.5"
+            >
               {'whatsapp' in link && link.whatsapp ? (
                 <a href={waUrl} target="_blank" rel="noopener noreferrer">
                   <MessageCircle className="h-3.5 w-3.5 mr-1 inline" />
@@ -84,17 +105,31 @@ export function Navbar() {
               )}
             </Button>
           ))}
-          <Button variant="outline" size="sm" onClick={toggleLang} className="ml-1 text-xs border-emerald-300 text-emerald-700">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={toggleLang}
+            className="ml-1 text-xs border-emerald-300 text-emerald-700"
+          >
             <Globe className="h-3.5 w-3.5 mr-1" />
             {lang === 'zh' ? 'EN' : '中'}
           </Button>
-          <Button size="sm" className="ml-2 bg-emerald-600 hover:bg-emerald-700 text-white" asChild>
+          <Button
+            size="sm"
+            className="ml-2 bg-emerald-600 hover:bg-emerald-700 text-white"
+            asChild
+          >
             <Link href="/apply">{lang === 'zh' ? '立即报名' : 'Apply Now'}</Link>
           </Button>
         </div>
 
-        <div className="flex lg:hidden items-center gap-2">
-          <Button variant="outline" size="sm" onClick={toggleLang} className="text-xs h-8 px-2">
+        <div className="flex lg:hidden items-center gap-2 shrink-0">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={toggleLang}
+            className="text-xs h-8 px-2"
+          >
             <Globe className="h-3.5 w-3.5" />
             {lang === 'zh' ? 'EN' : '中'}
           </Button>
@@ -106,32 +141,40 @@ export function Navbar() {
             </SheetTrigger>
             <SheetContent side="right" className="w-72">
               <SheetHeader>
-                <SheetTitle className="flex items-center gap-2">
-                  <GraduationCap className="h-5 w-5 text-emerald-600" />
-                  {lang === 'zh' ? '新纪元大学学院' : 'NEUC'}
+                <SheetTitle className="flex items-center gap-2.5 text-left font-bold">
+                  <BrandMark compact />
                 </SheetTitle>
               </SheetHeader>
               <div className="mt-8 flex flex-col gap-2">
                 {navLinks.map((link) => (
-                  <Button key={link.href} variant="ghost" className="justify-start h-12" asChild onClick={() => setMobileOpen(false)}>
+                  <Button
+                    key={link.href}
+                    variant="ghost"
+                    className="justify-start h-12"
+                    asChild
+                    onClick={() => setMobileOpen(false)}
+                  >
                     {'whatsapp' in link && link.whatsapp ? (
                       <a href={waUrl} target="_blank" rel="noopener noreferrer">
                         <MessageCircle className="h-4 w-4 mr-2 inline" />
                         {lang === 'zh' ? link.label.zh : link.label.en}
                       </a>
                     ) : (
-                      <Link href={link.href}>{lang === 'zh' ? link.label.zh : link.label.en}</Link>
+                      <Link href={link.href}>
+                        {lang === 'zh' ? link.label.zh : link.label.en}
+                      </Link>
                     )}
                   </Button>
                 ))}
-                <Button className="mt-4 bg-emerald-600" asChild onClick={() => setMobileOpen(false)}>
-                  <Link href="/apply">{lang === 'zh' ? '立即报名' : 'Apply Now'}</Link>
+                <Button
+                  className="mt-4 bg-emerald-600"
+                  asChild
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <Link href="/apply">
+                    {lang === 'zh' ? '立即报名' : 'Apply Now'}
+                  </Link>
                 </Button>
-                {shortlistIds.length > 0 && (
-                  <p className="text-xs text-muted-foreground px-4 pt-2">
-                    {lang === 'zh' ? `收藏 ${shortlistIds.length} 门课程` : `${shortlistIds.length} saved`}
-                  </p>
-                )}
               </div>
             </SheetContent>
           </Sheet>

@@ -2,8 +2,21 @@ import { redirect } from 'next/navigation';
 import { db } from '@/lib/db';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { AdminShell } from '@/components/admin/admin-shell';
+import { AdminListFilters } from '@/components/admin/admin-list-filters';
 import { ApplicationStatusSelect } from '@/components/admin/application-status-select';
+import { ProofScanPanel, type ProofCheck } from '@/components/admin/proof-scan-panel';
+import { ReviewStatusBadge } from '@/components/admin/review-status-badge';
 import { courses } from '@/data/courses';
+import {
+  buildApplicationWhere,
+  firstParam,
+  parseDateRange,
+} from '@/lib/admin-filters';
+import {
+  parseProofCheckJson,
+  resolveReviewStatus,
+  type ReviewStatus,
+} from '@/lib/proof-review';
 
 function courseName(id: string) {
   const c = courses.find((x) => x.id === id);
@@ -15,12 +28,14 @@ function parseGrades(raw: string | null) {
   try {
     const data = JSON.parse(raw) as {
       qualification?: string;
+      cgpa?: number;
       subjects?: { subject: string; grade: string }[];
       check?: {
         ok?: boolean;
         creditCount?: number;
         minCredits?: number;
         missingSubjects?: string[];
+        summary?: string;
       };
     };
     if (!data.subjects) {
@@ -32,35 +47,95 @@ function parseGrades(raw: string | null) {
   }
 }
 
-export default async function AdminApplicationsPage() {
+function parseProofCheck(raw: string | null): ProofCheck | null {
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as ProofCheck;
+  } catch {
+    return null;
+  }
+}
+
+type SearchParams = Promise<Record<string, string | string[] | undefined>>;
+
+export default async function AdminApplicationsPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
   if (!(await isAdminAuthenticated())) redirect('/admin/login');
 
-  const applications = await db.application.findMany({
+  const sp = await searchParams;
+  const q = firstParam(sp.q)?.trim() ?? '';
+  const status = firstParam(sp.status) || 'all';
+  const programme = firstParam(sp.programme) || 'all';
+  const discovery = firstParam(sp.discovery) || 'all';
+  const review = firstParam(sp.review) || 'all';
+  const range = parseDateRange(firstParam(sp.range));
+
+  const where = buildApplicationWhere({ q, status, programme, discovery, range });
+
+  const rows = await db.application.findMany({
+    where,
     orderBy: { createdAt: 'desc' },
-    take: 200,
+    take: 400,
   });
+
+  const applications = rows
+    .map((row) => {
+      const proofCheck = parseProofCheck(row.proofCheck);
+      const reviewJson = parseProofCheckJson(row.proofCheck);
+      const reviewStatus = resolveReviewStatus(reviewJson, Boolean(row.proofPath));
+      return { row, proofCheck, reviewStatus };
+    })
+    .filter((item) =>
+      review === 'all' ? true : item.reviewStatus === (review as ReviewStatus),
+    )
+    .slice(0, 200);
+
+  const programmes = courses.map((c) => ({
+    id: c.id,
+    label: `${c.code} · ${c.name.zh}`,
+  }));
 
   return (
     <AdminShell>
       <h1 className="text-2xl font-bold mb-2">Applications</h1>
-      <p className="text-sm text-muted-foreground mb-6">
-        Online applications ({applications.length})
-      </p>
+      <p className="text-sm text-muted-foreground mb-6">Online applications</p>
+
+      <AdminListFilters
+        variant="applications"
+        basePath="/admin/applications"
+        q={q}
+        status={status}
+        programme={programme}
+        discovery={discovery}
+        review={review}
+        range={range}
+        programmes={programmes}
+        resultCount={applications.length}
+      />
 
       <div className="space-y-4">
         {applications.length === 0 && (
           <p className="rounded-lg border bg-white p-8 text-center text-muted-foreground">
-            No applications yet
+            No applications match these filters
           </p>
         )}
 
-        {applications.map((row) => {
+        {applications.map(({ row, proofCheck, reviewStatus }) => {
           const grades = parseGrades(row.gradesResult);
           return (
             <article key={row.id} className="rounded-lg border bg-white p-4 text-sm">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <h2 className="font-semibold text-base">{row.name}</h2>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h2 className="font-semibold text-base">{row.name}</h2>
+                    <ReviewStatusBadge
+                      status={reviewStatus}
+                      gradesEditedAfterScan={Boolean(proofCheck?.gradesEditedAfterScan)}
+                    />
+                  </div>
                   <p className="text-muted-foreground">
                     {row.email}
                     {row.phone ? ` · ${row.phone}` : ''}
@@ -99,11 +174,15 @@ export default async function AdminApplicationsPage() {
                       ) : (
                         <span className="text-amber-700">Review needed</span>
                       )}
-                      {typeof grades.check.creditCount === 'number' && (
-                        <span className="text-muted-foreground">
-                          {' '}
-                          · {grades.check.creditCount}/{grades.check.minCredits} credits
-                        </span>
+                      {grades.check.summary ? (
+                        <span className="text-muted-foreground"> · {grades.check.summary}</span>
+                      ) : (
+                        typeof grades.check.creditCount === 'number' && (
+                          <span className="text-muted-foreground">
+                            {' '}
+                            · {grades.check.creditCount}/{grades.check.minCredits} credits
+                          </span>
+                        )
                       )}
                       {grades.check.missingSubjects && grades.check.missingSubjects.length > 0 && (
                         <span className="text-amber-700">
@@ -117,7 +196,9 @@ export default async function AdminApplicationsPage() {
                 <div className="sm:col-span-2">
                   <dt className="text-xs text-muted-foreground">Academic results</dt>
                   <dd className="mt-1">
-                    {grades && 'subjects' in grades && grades.subjects ? (
+                    {grades && 'cgpa' in grades && typeof grades.cgpa === 'number' ? (
+                      <span className="font-medium">CGPA {grades.cgpa.toFixed(2)}</span>
+                    ) : grades && 'subjects' in grades && grades.subjects ? (
                       <table className="w-full max-w-md text-xs border rounded overflow-hidden">
                         <thead className="bg-slate-50">
                           <tr>
@@ -141,6 +222,11 @@ export default async function AdminApplicationsPage() {
                     )}
                   </dd>
                 </div>
+                <ProofScanPanel
+                  applicationId={row.id}
+                  hasProof={Boolean(row.proofPath)}
+                  proofCheck={proofCheck}
+                />
                 {row.documentNotes && (
                   <div className="sm:col-span-2">
                     <dt className="text-xs text-muted-foreground">Notes</dt>

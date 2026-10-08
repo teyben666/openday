@@ -32,21 +32,13 @@ const typeVariant: Record<string, 'default' | 'secondary' | 'destructive' | 'out
  * We use a lookup so Tailwind can statically detect the classes.
  */
 const colorStripMap: Record<string, string> = {
-  amber: 'bg-amber-500',
-  cyan: 'bg-cyan-500',
-  emerald: 'bg-emerald-500',
-  fuchsia: 'bg-fuchsia-500',
-  lime: 'bg-lime-500',
-  orange: 'bg-orange-500',
-  pink: 'bg-pink-500',
-  purple: 'bg-purple-500',
-  red: 'bg-red-500',
-  rose: 'bg-rose-500',
-  slate: 'bg-slate-500',
-  stone: 'bg-stone-500',
-  teal: 'bg-teal-500',
-  violet: 'bg-violet-500',
+  purple: 'bg-purple-600',
+  red: 'bg-red-600',
+  blue: 'bg-blue-600',
   yellow: 'bg-yellow-500',
+  darkcyan: 'bg-[#0e7490]',
+  black: 'bg-neutral-900',
+  peach: 'bg-[#FCD5CE]',
 };
 
 export default function CourseCard({ course, onViewDetail, showCompare = true }: CourseCardProps) {

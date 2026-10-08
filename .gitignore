@@ -55,3 +55,10 @@ server.log
 
 # uploaded academic proofs
 /public/uploads/
+
+# local database + backups (contain applicant personal data)
+/db/
+
+# raw design assets and test screenshots
+/wiii/
+/tests/shot-*.png

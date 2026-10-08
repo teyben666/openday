@@ -50,15 +50,15 @@ export const courses: Course[] = [
       en: ['Counselling Theories', 'Psychological Counselling Skills', 'Personality Psychology', 'Developmental Psychology', 'Abnormal Psychology', 'Group Counselling', 'Family Therapy', 'Psychological Assessment', 'Ethics & Professional Issues', 'Research Methods', 'Crisis Intervention', 'Cross-Cultural Counselling'],
     },
     entryRequirements: {
-      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '独中统考文凭持有者', '通过面试评估'],
-      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Independent Chinese Secondary School graduates', 'Pass interview assessment'],
+      zh: ['预科 / 文凭 CGPA 至少 2.0（只有 SPM 需先读预科或文凭）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '独中统考文凭持有者', '通过面试评估'],
+      en: ['Foundation / Diploma with CGPA 2.0+ (SPM-only students start with a Foundation or Diploma)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Independent Chinese Secondary School graduates', 'Pass interview assessment'],
     },
     careerProspects: {
       zh: ['注册辅导员', '学校辅导员', '心理治疗师', '人力资源顾问', '社会服务工作者', '康复辅导员', '企业员工援助计划顾问', '社区心理健康工作者'],
       en: ['Registered Counsellor', 'School Counsellor', 'Psychotherapist', 'Human Resource Consultant', 'Social Service Worker', 'Rehabilitation Counsellor', 'Employee Assistance Programme (EAP) Consultant', 'Community Mental Health Worker'],
     },
     categories: ['counselling', 'social-work'],
-    color: 'rose',
+    color: 'yellow',
   },
   {
     id: 'BBA',
@@ -85,15 +85,15 @@ export const courses: Course[] = [
       en: ['Principles of Management', 'Business Statistics', 'Marketing Management', 'Human Resource Management', 'Financial Management', 'Corporate Strategy', 'Operations Management', 'Business Ethics', 'Organisational Behaviour', 'Entrepreneurship'],
     },
     entryRequirements: {
-      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', 'A-Level 至少2科及格', '相关科目的基础文凭'],
-      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'A-Level with at least 2 passes', 'Relevant foundation/diploma'],
+      zh: ['预科 / 文凭 CGPA 至少 2.0（只有 SPM 需先读预科或文凭）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', 'A-Level 至少2科及格', '相关科目的基础文凭'],
+      en: ['Foundation / Diploma with CGPA 2.0+ (SPM-only students start with a Foundation or Diploma)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'A-Level with at least 2 passes', 'Relevant foundation/diploma'],
     },
     careerProspects: {
       zh: ['企业管理员', '商业顾问', '人力资源经理', '运营经理', '企业家', '项目经理', '行政主管', '业务发展经理'],
       en: ['Business Administrator', 'Business Consultant', 'Human Resource Manager', 'Operations Manager', 'Entrepreneur', 'Project Manager', 'Executive Officer', 'Business Development Manager'],
     },
     categories: ['business'],
-    color: 'amber',
+    color: 'blue',
   },
   {
     id: 'BTCSL',
@@ -120,15 +120,15 @@ export const courses: Course[] = [
       en: ['Modern Chinese', 'Classical Chinese', 'Introduction to Linguistics', 'Chinese Teaching Methodology', 'Second Language Acquisition', 'Cross-Cultural Communication', 'Chinese Literature', 'Chinese Writing', 'Educational Psychology', 'HSK Teaching'],
     },
     entryRequirements: {
-      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '具备良好的中英文能力', '对汉语教学有浓厚兴趣'],
-      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Good command of Chinese and English', 'Strong interest in Chinese language teaching'],
+      zh: ['预科 / 文凭 CGPA 至少 2.0（只有 SPM 需先读预科或文凭）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '具备良好的中英文能力', '对汉语教学有浓厚兴趣'],
+      en: ['Foundation / Diploma with CGPA 2.0+ (SPM-only students start with a Foundation or Diploma)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Good command of Chinese and English', 'Strong interest in Chinese language teaching'],
     },
     careerProspects: {
       zh: ['国际汉语教师', '华小教师', '语言中心讲师', '对外汉语教学研究员', '文化交流专员', '教材编写员', '翻译', '教育行政人员'],
       en: ['International Chinese Teacher', 'SJK(C) Teacher', 'Language Centre Lecturer', 'TCSL Researcher', 'Cultural Exchange Officer', 'Teaching Material Developer', 'Translator', 'Education Administrator'],
     },
     categories: ['education', 'chinese'],
-    color: 'red',
+    color: 'peach',
   },
   {
     id: 'BECE',
@@ -155,15 +155,15 @@ export const courses: Course[] = [
       en: ['Child Development', 'Introduction to Early Childhood Education', 'Early Childhood Curriculum Design', 'Early Childhood Teaching Methods', 'Special Needs Early Childhood Education', 'Child Mental Health', 'Children\'s Literature', 'Early Childhood Arts Education', 'Educational Administration', 'Research Methods in Early Childhood Education'],
     },
     entryRequirements: {
-      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '热爱幼儿教育事业', '具有耐心和责任心'],
-      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Passion for early childhood education', 'Patient and responsible'],
+      zh: ['预科 / 文凭 CGPA 至少 2.0（只有 SPM 需先读预科或文凭）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '热爱幼儿教育事业', '具有耐心和责任心'],
+      en: ['Foundation / Diploma with CGPA 2.0+ (SPM-only students start with a Foundation or Diploma)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Passion for early childhood education', 'Patient and responsible'],
     },
     careerProspects: {
       zh: ['幼儿园教师', '幼儿教育顾问', '课程发展专员', '幼儿教育中心主任', '特殊需求教育教师', '儿童发展研究员', '教育培训师', '教育行政人员'],
       en: ['Kindergarten Teacher', 'Early Childhood Education Consultant', 'Curriculum Development Specialist', 'Early Childhood Education Centre Director', 'Special Needs Education Teacher', 'Child Development Researcher', 'Education Trainer', 'Education Administrator'],
     },
     categories: ['education'],
-    color: 'pink',
+    color: 'yellow',
   },
   {
     id: 'BFA',
@@ -190,15 +190,15 @@ export const courses: Course[] = [
       en: ['Financial Accounting', 'Management Accounting', 'Corporate Finance', 'Auditing', 'Taxation', 'Financial Management', 'Accounting Information Systems', 'Business Law', 'Investment Analysis', 'International Finance'],
     },
     entryRequirements: {
-      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', 'A-Level 至少2科及格', '对数字和金融有浓厚兴趣'],
-      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'A-Level with at least 2 passes', 'Strong interest in numbers and finance'],
+      zh: ['预科 / 文凭 CGPA 至少 2.0（只有 SPM 需先读预科或文凭）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', 'A-Level 至少2科及格', '对数字和金融有浓厚兴趣'],
+      en: ['Foundation / Diploma with CGPA 2.0+ (SPM-only students start with a Foundation or Diploma)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'A-Level with at least 2 passes', 'Strong interest in numbers and finance'],
     },
     careerProspects: {
       zh: ['会计师', '审计师', '财务分析师', '税务顾问', '投资银行分析师', '财务经理', '内部审计师', '风险管理专员'],
       en: ['Accountant', 'Auditor', 'Financial Analyst', 'Tax Consultant', 'Investment Banking Analyst', 'Finance Manager', 'Internal Auditor', 'Risk Management Specialist'],
     },
     categories: ['finance', 'business'],
-    color: 'emerald',
+    color: 'blue',
   },
   {
     id: 'BCL',
@@ -225,15 +225,15 @@ export const courses: Course[] = [
       en: ['History of Chinese Literature', 'Modern Chinese', 'Classical Chinese', 'Chinese Philosophy', 'Chinese History', 'Malaysian Chinese Literature', 'Literary Criticism', 'Chinese Philology', 'Southeast Asian Chinese Studies', 'Academic Writing'],
     },
     entryRequirements: {
-      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '具备良好的中文读写能力', '对中华文化有浓厚兴趣'],
-      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Good command of written and spoken Chinese', 'Strong interest in Chinese culture'],
+      zh: ['预科 / 文凭 CGPA 至少 2.0（只有 SPM 需先读预科或文凭）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '具备良好的中文读写能力', '对中华文化有浓厚兴趣'],
+      en: ['Foundation / Diploma with CGPA 2.0+ (SPM-only students start with a Foundation or Diploma)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Good command of written and spoken Chinese', 'Strong interest in Chinese culture'],
     },
     careerProspects: {
       zh: ['中文教师', '编辑', '记者', '文化工作者', '翻译', '研究人员', '公关专员', '内容创作者'],
       en: ['Chinese Language Teacher', 'Editor', 'Journalist', 'Cultural Worker', 'Translator', 'Researcher', 'Public Relations Officer', 'Content Creator'],
     },
     categories: ['chinese'],
-    color: 'orange',
+    color: 'red',
   },
   {
     id: 'BVC',
@@ -260,15 +260,15 @@ export const courses: Course[] = [
       en: ['Design Fundamentals', 'Colour Theory', 'Typography', 'Brand Identity Design', 'Packaging Design', 'Digital Illustration', 'User Experience Design', 'Advertising Design', 'Design History', 'Final Year Design Project'],
     },
     entryRequirements: {
-      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '需提交作品集', '通过面试评估'],
-      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Portfolio submission required', 'Pass interview assessment'],
+      zh: ['预科 / 文凭 CGPA 至少 2.0（只有 SPM 需先读预科或文凭）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '需提交作品集', '通过面试评估'],
+      en: ['Foundation / Diploma with CGPA 2.0+ (SPM-only students start with a Foundation or Diploma)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Portfolio submission required', 'Pass interview assessment'],
     },
     careerProspects: {
       zh: ['视觉设计师', '品牌设计师', 'UI/UX设计师', '插画师', '包装设计师', '艺术总监', '广告创意总监', '自由设计师'],
       en: ['Visual Designer', 'Brand Designer', 'UI/UX Designer', 'Illustrator', 'Packaging Designer', 'Art Director', 'Creative Director', 'Freelance Designer'],
     },
     categories: ['design'],
-    color: 'violet',
+    color: 'darkcyan',
   },
   {
     id: 'BSE',
@@ -295,15 +295,15 @@ export const courses: Course[] = [
       en: ['Programming Fundamentals', 'Data Structures & Algorithms', 'Database Systems', 'Operating Systems', 'Software Engineering', 'Artificial Intelligence', 'Machine Learning', 'Web Development', 'Mobile App Development', 'Cloud Computing'],
     },
     entryRequirements: {
-      zh: ['SPM 5科优等（包括马来文和数学）', 'UEC 至少5科B级（包括数学）', 'STPM 至少CGPA 2.0', '对编程和科技有浓厚兴趣', '具备逻辑思维能力'],
-      en: ['SPM with 5 credits (including Bahasa Melayu & Mathematics)', 'UEC with at least 5 subjects at Grade B (including Mathematics)', 'STPM with minimum CGPA 2.0', 'Strong interest in programming and technology', 'Logical thinking ability'],
+      zh: ['预科 / 文凭 CGPA 至少 2.0，并具备 SPM 数学优等（只有 SPM 需先读预科或文凭）', 'UEC 至少5科B级（包括数学）', 'STPM 至少CGPA 2.0', '对编程和科技有浓厚兴趣', '具备逻辑思维能力'],
+      en: ['Foundation / Diploma with CGPA 2.0+, plus an SPM Mathematics credit (SPM-only students start with a Foundation or Diploma)', 'UEC with at least 5 subjects at Grade B (including Mathematics)', 'STPM with minimum CGPA 2.0', 'Strong interest in programming and technology', 'Logical thinking ability'],
     },
     careerProspects: {
       zh: ['软件工程师', '全栈开发者', '移动应用开发者', 'AI工程师', '系统分析师', '产品经理', '技术顾问', 'IT项目经理'],
       en: ['Software Engineer', 'Full-Stack Developer', 'Mobile App Developer', 'AI Engineer', 'Systems Analyst', 'Product Manager', 'Technology Consultant', 'IT Project Manager'],
     },
     categories: ['tech'],
-    color: 'cyan',
+    color: 'purple',
   },
   {
     id: 'BIM',
@@ -330,15 +330,15 @@ export const courses: Course[] = [
       en: ['Principles of Marketing', 'Consumer Behaviour', 'Digital Marketing', 'Brand Management', 'Marketing Research', 'Integrated Marketing Communications', 'Sales Management', 'International Marketing', 'Social Media Marketing', 'Marketing Strategy'],
     },
     entryRequirements: {
-      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', 'A-Level 至少2科及格', '具备良好的沟通能力'],
-      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'A-Level with at least 2 passes', 'Good communication skills'],
+      zh: ['预科 / 文凭 CGPA 至少 2.0（只有 SPM 需先读预科或文凭）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', 'A-Level 至少2科及格', '具备良好的沟通能力'],
+      en: ['Foundation / Diploma with CGPA 2.0+ (SPM-only students start with a Foundation or Diploma)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'A-Level with at least 2 passes', 'Good communication skills'],
     },
     careerProspects: {
       zh: ['营销经理', '品牌经理', '数字营销专员', '市场调研分析师', '公关经理', '广告策划', '社交媒体经理', '销售总监'],
       en: ['Marketing Manager', 'Brand Manager', 'Digital Marketing Specialist', 'Market Research Analyst', 'Public Relations Manager', 'Advertising Planner', 'Social Media Manager', 'Sales Director'],
     },
     categories: ['business', 'media'],
-    color: 'yellow',
+    color: 'blue',
   },
   {
     id: 'BCS',
@@ -365,15 +365,15 @@ export const courses: Course[] = [
       en: ['Cybersecurity Fundamentals', 'Cryptography', 'Network Attack & Defence', 'Digital Forensics', 'Information Systems Security', 'Ethical Hacking', 'Security Management & Compliance', 'Database Security', 'Cloud Security', 'Security Operations'],
     },
     entryRequirements: {
-      zh: ['SPM 5科优等（包括马来文和数学）', 'UEC 至少5科B级（包括数学）', 'STPM 至少CGPA 2.0', '对网络安全有浓厚兴趣', '具备基本的计算机操作能力'],
-      en: ['SPM with 5 credits (including Bahasa Melayu & Mathematics)', 'UEC with at least 5 subjects at Grade B (including Mathematics)', 'STPM with minimum CGPA 2.0', 'Strong interest in cybersecurity', 'Basic computer literacy'],
+      zh: ['预科 / 文凭 CGPA 至少 2.0，并具备 SPM 数学优等（只有 SPM 需先读预科或文凭）', 'UEC 至少5科B级（包括数学）', 'STPM 至少CGPA 2.0', '对网络安全有浓厚兴趣', '具备基本的计算机操作能力'],
+      en: ['Foundation / Diploma with CGPA 2.0+, plus an SPM Mathematics credit (SPM-only students start with a Foundation or Diploma)', 'UEC with at least 5 subjects at Grade B (including Mathematics)', 'STPM with minimum CGPA 2.0', 'Strong interest in cybersecurity', 'Basic computer literacy'],
     },
     careerProspects: {
       zh: ['网络安全分析师', '渗透测试工程师', '安全运维工程师', '数字取证专家', '信息安全顾问', '安全架构师', '事件响应分析师', '合规审计员'],
       en: ['Cybersecurity Analyst', 'Penetration Tester', 'Security Operations Engineer', 'Digital Forensics Expert', 'Information Security Consultant', 'Security Architect', 'Incident Response Analyst', 'Compliance Auditor'],
     },
     categories: ['tech'],
-    color: 'slate',
+    color: 'purple',
   },
   {
     id: 'BMS',
@@ -400,15 +400,15 @@ export const courses: Course[] = [
       en: ['Introduction to Communication', 'News Writing', 'Public Relations Principles', 'Advertising', 'New Media Studies', 'Media Ethics & Law', 'Photography & Videography', 'Media Production', 'Brand Communication', 'Media Research Methods'],
     },
     entryRequirements: {
-      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '具备良好的中英文表达能力', '对传媒行业有热情'],
-      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Good command of Chinese and English expression', 'Passion for the media industry'],
+      zh: ['预科 / 文凭 CGPA 至少 2.0（只有 SPM 需先读预科或文凭）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '具备良好的中英文表达能力', '对传媒行业有热情'],
+      en: ['Foundation / Diploma with CGPA 2.0+ (SPM-only students start with a Foundation or Diploma)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Good command of Chinese and English expression', 'Passion for the media industry'],
     },
     careerProspects: {
       zh: ['记者', '公关专员', '广告策划', '新媒体运营', '内容创作者', '媒体制作人', '品牌传播经理', '新闻编辑'],
       en: ['Journalist', 'Public Relations Officer', 'Advertising Planner', 'New Media Operator', 'Content Creator', 'Media Producer', 'Brand Communication Manager', 'News Editor'],
     },
     categories: ['media'],
-    color: 'fuchsia',
+    color: 'red',
   },
   {
     id: 'BIP',
@@ -435,15 +435,15 @@ export const courses: Course[] = [
       en: ['Introduction to Psychology', 'Biological Psychology', 'Cognitive Psychology', 'Social Psychology', 'Developmental Psychology', 'Abnormal Psychology', 'Psychological Statistics', 'Research Methods in Psychology', 'Personality Psychology', 'Health Psychology'],
     },
     entryRequirements: {
-      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '对心理学有浓厚兴趣', '具备良好的分析能力'],
-      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Strong interest in psychology', 'Good analytical skills'],
+      zh: ['预科 / 文凭 CGPA 至少 2.0（只有 SPM 需先读预科或文凭）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '对心理学有浓厚兴趣', '具备良好的分析能力'],
+      en: ['Foundation / Diploma with CGPA 2.0+ (SPM-only students start with a Foundation or Diploma)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Strong interest in psychology', 'Good analytical skills'],
     },
     careerProspects: {
       zh: ['心理顾问', '人力资源专员', '市场调研分析师', '学校心理辅导员', '康复中心工作人员', '行为分析师', '社工', ' UX研究员'],
       en: ['Psychological Consultant', 'Human Resource Specialist', 'Market Research Analyst', 'School Counsellor', 'Rehabilitation Centre Worker', 'Behavioural Analyst', 'Social Worker', 'UX Researcher'],
     },
     categories: ['counselling', 'social-work'],
-    color: 'teal',
+    color: 'yellow',
   },
   {
     id: 'BFI',
@@ -470,15 +470,15 @@ export const courses: Course[] = [
       en: ['Investment', 'Wealth Management', 'Financial Derivatives', 'Risk Management', 'Securities Analysis', 'Portfolio Management', 'Financial Markets & Institutions', 'Corporate Finance', 'Financial Technology', 'International Financial Management'],
     },
     entryRequirements: {
-      zh: ['SPM 5科优等（包括马来文和数学）', 'UEC 至少5科B级（包括数学）', 'STPM 至少CGPA 2.0', '对金融投资有浓厚兴趣', '具备数学分析能力'],
-      en: ['SPM with 5 credits (including Bahasa Melayu & Mathematics)', 'UEC with at least 5 subjects at Grade B (including Mathematics)', 'STPM with minimum CGPA 2.0', 'Strong interest in finance and investment', 'Mathematical analysis ability'],
+      zh: ['预科 / 文凭 CGPA 至少 2.0，并具备 SPM 数学优等（只有 SPM 需先读预科或文凭）', 'UEC 至少5科B级（包括数学）', 'STPM 至少CGPA 2.0', '对金融投资有浓厚兴趣', '具备数学分析能力'],
+      en: ['Foundation / Diploma with CGPA 2.0+, plus an SPM Mathematics credit (SPM-only students start with a Foundation or Diploma)', 'UEC with at least 5 subjects at Grade B (including Mathematics)', 'STPM with minimum CGPA 2.0', 'Strong interest in finance and investment', 'Mathematical analysis ability'],
     },
     careerProspects: {
       zh: ['投资分析师', '财富管理顾问', '基金经理', '风险管理师', '证券交易员', '金融顾问', '投资银行家', '资产评估师'],
       en: ['Investment Analyst', 'Wealth Management Advisor', 'Fund Manager', 'Risk Manager', 'Securities Trader', 'Financial Advisor', 'Investment Banker', 'Asset Valuer'],
     },
     categories: ['finance', 'business'],
-    color: 'lime',
+    color: 'blue',
   },
   {
     id: 'BCA',
@@ -505,15 +505,15 @@ export const courses: Course[] = [
       en: ['Introduction to Film', 'Screenwriting Fundamentals', 'Cinematography', 'Film Editing', 'Sound Design', 'Directing Art', 'Documentary Production', 'Animation Fundamentals', 'Film Aesthetics', 'Final Year Film Project'],
     },
     entryRequirements: {
-      zh: ['SPM 5科优等（包括马来文）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '需提交创意作品集或短片', '通过面试评估'],
-      en: ['SPM with 5 credits (including Bahasa Melayu)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Creative portfolio or short film submission required', 'Pass interview assessment'],
+      zh: ['预科 / 文凭 CGPA 至少 2.0（只有 SPM 需先读预科或文凭）', 'UEC 至少5科B级', 'STPM 至少CGPA 2.0', '需提交创意作品集或短片', '通过面试评估'],
+      en: ['Foundation / Diploma with CGPA 2.0+ (SPM-only students start with a Foundation or Diploma)', 'UEC with at least 5 subjects at Grade B', 'STPM with minimum CGPA 2.0', 'Creative portfolio or short film submission required', 'Pass interview assessment'],
     },
     careerProspects: {
       zh: ['电影导演', '编剧', '摄影师', '剪辑师', '音效设计师', '制片人', '影视教师', '自媒体创作者'],
       en: ['Film Director', 'Screenwriter', 'Cinematographer', 'Film Editor', 'Sound Designer', 'Producer', 'Film Educator', 'Content Creator'],
     },
     categories: ['media', 'design'],
-    color: 'purple',
+    color: 'darkcyan',
   },
 
   // ============================================================
@@ -523,7 +523,7 @@ export const courses: Course[] = [
     id: 'FCC',
     type: 'foundation',
     code: 'FCC',
-    department: { zh: '中文系', en: 'Dept of Chinese Studies' },
+    department: { zh: '基础班', en: 'Foundation' },
     name: {
       zh: '中文传播大学基础课程',
       en: 'Foundation in Chinese Communication',
@@ -552,13 +552,13 @@ export const courses: Course[] = [
       en: ['Progress to Bachelor of Chinese', 'Progress to Bachelor of TCSL', 'Progress to Bachelor of Media & Communication', 'Progress to Education degree programmes', 'Entry-level Chinese-related positions'],
     },
     categories: ['chinese', 'education'],
-    color: 'orange',
+    color: 'black',
   },
   {
     id: 'FIA',
     type: 'foundation',
     code: 'FIA',
-    department: { zh: '注册处', en: "Registrar's Office" },
+    department: { zh: '基础班', en: 'Foundation' },
     name: {
       zh: '文科基础课程',
       en: 'Foundation in Arts',
@@ -587,7 +587,7 @@ export const courses: Course[] = [
       en: ['Progress to Bachelor of Business Administration', 'Progress to Bachelor of Marketing', 'Progress to Bachelor of Media & Communication', 'Progress to Design degree programmes', 'Progress to Finance & Accounting degree programmes'],
     },
     categories: ['business', 'education', 'design', 'media'],
-    color: 'stone',
+    color: 'black',
   },
 
   // ============================================================
@@ -626,7 +626,7 @@ export const courses: Course[] = [
       en: ['Administrative Assistant', 'Sales Representative', 'Customer Service Officer', 'Business Administrator', 'Marketing Assistant', 'HR Assistant', 'Bank Teller', 'Entrepreneur'],
     },
     categories: ['business'],
-    color: 'amber',
+    color: 'blue',
   },
   {
     id: 'DAC',
@@ -661,7 +661,7 @@ export const courses: Course[] = [
       en: ['Accounting Assistant', 'Bookkeeper', 'Tax Assistant', 'Audit Assistant', 'Finance Clerk', 'Payroll Administrator', 'Accounts Receivable Clerk', 'Accounts Payable Clerk'],
     },
     categories: ['finance'],
-    color: 'emerald',
+    color: 'blue',
   },
   {
     id: 'DIT',
@@ -696,7 +696,7 @@ export const courses: Course[] = [
       en: ['IT Support', 'Web Developer', 'Database Administrator', 'Network Administrator', 'Software Tester', 'System Administrator', 'IT Assistant', 'Technical Support Specialist'],
     },
     categories: ['tech'],
-    color: 'cyan',
+    color: 'purple',
   },
   {
     id: 'DMS',
@@ -731,7 +731,7 @@ export const courses: Course[] = [
       en: ['Media Assistant', 'Photojournalist', 'Video Editor', 'New Media Specialist', 'Event Planner', 'PR Assistant', 'Content Creator', 'Broadcasting Assistant'],
     },
     categories: ['media'],
-    color: 'fuchsia',
+    color: 'red',
   },
   {
     id: 'DVA',
@@ -766,7 +766,7 @@ export const courses: Course[] = [
       en: ['Visual Artist', 'Illustrator', 'Art Teacher', 'Gallery Assistant', 'Exhibition Curator', 'Art Therapy Assistant', 'Creative Designer', 'Freelance Artist'],
     },
     categories: ['design'],
-    color: 'violet',
+    color: 'darkcyan',
   },
   {
     id: 'DGD',
@@ -801,7 +801,7 @@ export const courses: Course[] = [
       en: ['Graphic Designer', 'Brand Designer', 'Packaging Designer', 'Typography Designer', 'Advertising Designer', 'UI Designer', 'Freelance Designer', 'Design Assistant'],
     },
     categories: ['design'],
-    color: 'violet',
+    color: 'darkcyan',
   },
   {
     id: 'DID',
@@ -836,7 +836,7 @@ export const courses: Course[] = [
       en: ['Interior Designer', 'Space Planner', 'Exhibition Designer', 'Furniture Designer', 'Lighting Designer', 'Design Assistant', '3D Visualiser', 'Interior Decorator'],
     },
     categories: ['design'],
-    color: 'violet',
+    color: 'darkcyan',
   },
   {
     id: 'TCSL',
@@ -871,7 +871,7 @@ export const courses: Course[] = [
       en: ['Chinese Language Teacher', 'SJK(C) Teaching Assistant', 'Language Centre Tutor', 'Private Tutor', 'Teaching Material Assistant Editor', 'Cultural Exchange Assistant', 'Translation Assistant', 'Chinese Teaching Assistant'],
     },
     categories: ['education', 'chinese'],
-    color: 'red',
+    color: 'peach',
   },
   {
     id: 'ECE',
@@ -906,7 +906,7 @@ export const courses: Course[] = [
       en: ['Kindergarten Teacher', 'Nursery Teacher', 'Early Childhood Centre Assistant', 'Special Needs Teaching Assistant', 'Children\'s Activity Planner', 'Private Tutor', 'Teaching Material Editor Assistant', 'After-School Tutor'],
     },
     categories: ['education'],
-    color: 'pink',
+    color: 'yellow',
   },
   {
     id: 'DIM',
@@ -941,7 +941,7 @@ export const courses: Course[] = [
       en: ['Marketing Assistant', 'Sales Representative', 'Social Media Operator', 'Customer Service Officer', 'Market Research Assistant', 'Event Planning Assistant', 'Retail Staff', 'E-Commerce Operator'],
     },
     categories: ['business', 'media'],
-    color: 'yellow',
+    color: 'blue',
   },
   {
     id: 'DCS',
@@ -976,7 +976,7 @@ export const courses: Course[] = [
       en: ['Junior Programmer', 'IT Support', 'Web Developer', 'Software Tester', 'System Administrator', 'Database Assistant', 'IT Assistant', 'Technical Clerk'],
     },
     categories: ['tech'],
-    color: 'cyan',
+    color: 'purple',
   },
   {
     id: 'DMD',
@@ -1011,7 +1011,7 @@ export const courses: Course[] = [
       en: ['Animator', 'Game Designer', 'Interaction Designer', 'Video Editor', 'Motion Graphics Designer', 'UI Designer', 'Multimedia Designer', 'Digital Content Creator'],
     },
     categories: ['design', 'tech'],
-    color: 'purple',
+    color: 'darkcyan',
   },
   {
     id: 'DPA',
@@ -1046,7 +1046,7 @@ export const courses: Course[] = [
       en: ['Stage Actor', 'Film/TV Actor', 'Director Assistant', 'Stage Manager', 'Drama Teacher', 'Event Host', 'Cultural Worker', 'Creative Performer'],
     },
     categories: ['media', 'design'],
-    color: 'rose',
+    color: 'darkcyan',
   },
   {
     id: 'DECM',
@@ -1081,6 +1081,6 @@ export const courses: Course[] = [
       en: ['Care Centre Administrator', 'Elderly Care Manager', 'Rehabilitation Centre Specialist', 'Community Health Worker', 'Nursing Home Operations Manager', 'Social Worker', 'Health Consultant', 'Activity Planner'],
     },
     categories: ['social-work', 'care'],
-    color: 'stone',
+    color: 'black',
   },
 ];

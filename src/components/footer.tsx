@@ -1,10 +1,14 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLanguage } from '@/store/use-language';
 import { Separator } from '@/components/ui/separator';
 import { buildWhatsAppUrl, buildGeneralWhatsAppMessage } from '@/lib/contact';
-import { GraduationCap, Mail, Phone, MapPin, Globe, Facebook, Instagram, Youtube, Twitter } from 'lucide-react';
+import { Mail, Phone, MapPin, Globe, Facebook, Instagram, Youtube, Twitter } from 'lucide-react';
+
+const BRAND_EN = 'New Era University College';
+const BRAND_ZH = '新纪元大学学院';
 
 const quickLinks = [
   { label: { zh: '首页', en: 'Home' }, href: '/' },
@@ -23,12 +27,19 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-12 md:py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div className="sm:col-span-2 lg:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <GraduationCap className="h-6 w-6 text-emerald-400" />
-              <span className="font-bold text-lg text-white">
-                {t('新纪元大学学院', 'New Era University College')}
+            <Link href="/" className="mb-4 flex items-center gap-3">
+              <Image
+                src="/neuc-logo.png"
+                alt={`${BRAND_EN} ${BRAND_ZH}`}
+                width={44}
+                height={44}
+                className="h-11 w-11 shrink-0 rounded-sm object-contain"
+              />
+              <span className="font-bold leading-tight text-white">
+                <span className="block text-base">{BRAND_EN}</span>
+                <span className="block text-sm font-semibold text-gray-400">{BRAND_ZH}</span>
               </span>
-            </div>
+            </Link>
             <p className="text-sm text-gray-400 leading-relaxed">
               {t(
                 '新纪元大学学院致力于培养具有全球视野和创新精神的人才，提供多元化的高等教育课程。',
@@ -37,7 +48,11 @@ export function Footer() {
             </p>
             <div className="flex gap-3 mt-5">
               {[Facebook, Instagram, Youtube, Twitter].map((Icon, i) => (
-                <button key={i} className="h-9 w-9 rounded-full bg-gray-800 hover:bg-emerald-600 flex items-center justify-center transition-colors" aria-label="Social">
+                <button
+                  key={i}
+                  className="h-9 w-9 rounded-full bg-gray-800 hover:bg-emerald-600 flex items-center justify-center transition-colors"
+                  aria-label="Social"
+                >
                   <Icon className="h-4 w-4" />
                 </button>
               ))}
@@ -50,11 +65,19 @@ export function Footer() {
               {quickLinks.map((link) => (
                 <li key={link.href}>
                   {link.href === 'whatsapp' ? (
-                    <a href={waUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-gray-400 hover:text-emerald-400 transition-colors">
+                    <a
+                      href={waUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-gray-400 hover:text-emerald-400 transition-colors"
+                    >
                       {lang === 'zh' ? link.label.zh : link.label.en}
                     </a>
                   ) : (
-                    <Link href={link.href} className="text-sm text-gray-400 hover:text-emerald-400 transition-colors">
+                    <Link
+                      href={link.href}
+                      className="text-sm text-gray-400 hover:text-emerald-400 transition-colors"
+                    >
                       {lang === 'zh' ? link.label.zh : link.label.en}
                     </Link>
                   )}
@@ -66,8 +89,19 @@ export function Footer() {
           <div>
             <h3 className="font-semibold text-white mb-4">{t('课程项目', 'Programmes')}</h3>
             <ul className="space-y-2.5">
-              <li><Link href="/courses" className="text-sm text-gray-400 hover:text-emerald-400">{t('全部课程', 'All Programmes')}</Link></li>
-              <li><Link href="/courses#foundation" className="text-sm text-gray-400 hover:text-emerald-400">{t('基础课程', 'Foundation')}</Link></li>
+              <li>
+                <Link href="/courses" className="text-sm text-gray-400 hover:text-emerald-400">
+                  {t('全部课程', 'All Programmes')}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/courses#foundation"
+                  className="text-sm text-gray-400 hover:text-emerald-400"
+                >
+                  {t('基础课程', 'Foundation')}
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -76,7 +110,12 @@ export function Footer() {
             <ul className="space-y-3">
               <li className="flex items-start gap-2.5">
                 <Mail className="h-4 w-4 text-emerald-400 mt-0.5 shrink-0" />
-                <a href="mailto:iie@newera.edu.my" className="text-sm text-gray-400 hover:text-emerald-400 break-all">iie@newera.edu.my</a>
+                <a
+                  href="mailto:iie@newera.edu.my"
+                  className="text-sm text-gray-400 hover:text-emerald-400 break-all"
+                >
+                  iie@newera.edu.my
+                </a>
               </li>
               <li className="flex items-start gap-2.5">
                 <Phone className="h-4 w-4 text-emerald-400 mt-0.5 shrink-0" />
@@ -88,7 +127,14 @@ export function Footer() {
               </li>
               <li className="flex items-start gap-2.5">
                 <Globe className="h-4 w-4 text-emerald-400 mt-0.5 shrink-0" />
-                <a href="https://www.newera.edu.my" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-400 hover:text-emerald-400">www.newera.edu.my</a>
+                <a
+                  href="https://www.newera.edu.my"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-gray-400 hover:text-emerald-400"
+                >
+                  www.newera.edu.my
+                </a>
               </li>
             </ul>
           </div>
@@ -96,7 +142,10 @@ export function Footer() {
 
         <Separator className="my-8 bg-gray-800" />
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
-          <p>© {new Date().getFullYear()} {t('新纪元大学学院', 'NEUC')}. {t('保留所有权利', 'All rights reserved')}.</p>
+          <p>
+            © {new Date().getFullYear()} {BRAND_EN} {BRAND_ZH}.{' '}
+            {t('保留所有权利', 'All rights reserved')}.
+          </p>
         </div>
       </div>
     </footer>

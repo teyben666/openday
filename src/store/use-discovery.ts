@@ -2,35 +2,6 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { DiscoveryResult } from '@/lib/course-matching';
 
-interface ShortlistStore {
-  ids: string[];
-  toggle: (id: string) => void;
-  add: (id: string) => void;
-  remove: (id: string) => void;
-  clear: () => void;
-  isInShortlist: (id: string) => boolean;
-}
-
-export const useShortlist = create<ShortlistStore>()(
-  persist(
-    (set, get) => ({
-      ids: [],
-      toggle: (id) => {
-        const { ids } = get();
-        if (ids.includes(id)) set({ ids: ids.filter((i) => i !== id) });
-        else set({ ids: [...ids, id] });
-      },
-      add: (id) => {
-        if (!get().ids.includes(id)) set({ ids: [...get().ids, id] });
-      },
-      remove: (id) => set({ ids: get().ids.filter((i) => i !== id) }),
-      clear: () => set({ ids: [] }),
-      isInShortlist: (id) => get().ids.includes(id),
-    }),
-    { name: 'neuc-shortlist' },
-  ),
-);
-
 export interface LeadInfo {
   name: string;
   email: string;

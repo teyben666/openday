@@ -1,11 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/store/use-language';
 import { Sparkles, ArrowDown, BookOpen } from 'lucide-react';
+
+const HERO_VIDEOS = [
+  'https://www.newera.edu.my/images/%E3%80%901122%E3%80%91Menara_Nantah_Video_mute.mp4',
+  'https://www.newera.edu.my/images/NEUC_video_bg.mp4',
+] as const;
 
 function useTypingEffect(strings: string[], speed = 80, pause = 2000) {
   const [display, setDisplay] = useState('');
@@ -46,31 +51,45 @@ function useTypingEffect(strings: string[], speed = 80, pause = 2000) {
   return display;
 }
 
-function FloatingShape({
-  className,
-  delay = 0,
-  duration = 6,
-}: {
-  className?: string;
-  delay?: number;
-  duration?: number;
-}) {
+function HeroVideoBackground() {
+  const [active, setActive] = useState(0);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+
+  useEffect(() => {
+    const video = videoRefs.current[active];
+    if (!video) return;
+
+    video.currentTime = 0;
+    const play = video.play();
+    if (play && typeof play.catch === 'function') {
+      play.catch(() => {
+        // Autoplay can fail until user gesture; muted + playsInline usually works.
+      });
+    }
+  }, [active]);
+
   return (
-    <motion.div
-      className={`absolute pointer-events-none select-none ${className}`}
-      initial={{ opacity: 0, y: 30 }}
-      animate={{
-        opacity: [0, 0.6, 0.3, 0.6, 0],
-        y: [30, -40, 20, -30, 30],
-        rotate: [0, 90, 180, 270, 360],
-      }}
-      transition={{
-        duration,
-        repeat: Infinity,
-        delay,
-        ease: 'easeInOut',
-      }}
-    />
+    <div className="absolute inset-0 overflow-hidden bg-black">
+      {HERO_VIDEOS.map((src, index) => (
+        <video
+          key={src}
+          ref={(el) => {
+            videoRefs.current[index] = el;
+          }}
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
+            index === active ? 'opacity-100' : 'opacity-0'
+          }`}
+          src={src}
+          muted
+          playsInline
+          preload={index === 0 ? 'auto' : 'metadata'}
+          onEnded={() => setActive((i) => (i + 1) % HERO_VIDEOS.length)}
+          aria-hidden
+        />
+      ))}
+      {/* Neutral dark overlay for text readability */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60" />
+    </div>
   );
 }
 
@@ -87,75 +106,10 @@ export default function HeroSection() {
 
   return (
     <section className="relative w-full min-h-[92vh] flex items-center justify-center overflow-hidden">
-      {/* ── gradient background ── */}
-      <div className="absolute inset-0 bg-gradient-to-br from-emerald-600 via-teal-500 to-emerald-700" />
-
-      {/* ── subtle grid overlay ── */}
-      <div
-        className="absolute inset-0 opacity-[0.06]"
-        style={{
-          backgroundImage:
-            'linear-gradient(rgba(255,255,255,.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.15) 1px, transparent 1px)',
-          backgroundSize: '60px 60px',
-        }}
-      />
-
-      {/* ── radial glow ── */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full"
-        style={{
-          background:
-            'radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%)',
-        }}
-        animate={{ scale: [1, 1.1, 1], opacity: [0.6, 0.9, 0.6] }}
-        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-      />
-
-      {/* ── floating shapes ── */}
-      <FloatingShape
-        className="top-[10%] left-[8%] w-16 h-16 rounded-full bg-white/10"
-        delay={0}
-        duration={7}
-      />
-      <FloatingShape
-        className="top-[20%] right-[12%] w-10 h-10 rounded-lg bg-white/10"
-        delay={1.2}
-        duration={8}
-      />
-      <FloatingShape
-        className="bottom-[25%] left-[15%] w-12 h-12 rounded-full bg-white/10"
-        delay={0.8}
-        duration={9}
-      />
-      <FloatingShape
-        className="bottom-[15%] right-[8%] w-20 h-20 rounded-xl bg-white/10"
-        delay={1.5}
-        duration={10}
-      />
-      <FloatingShape
-        className="top-[50%] left-[5%] w-8 h-8 rounded-full bg-white/15"
-        delay={2}
-        duration={6}
-      />
-      <FloatingShape
-        className="top-[35%] right-[25%] w-6 h-6 rounded-md bg-white/15"
-        delay={0.5}
-        duration={7}
-      />
-      <FloatingShape
-        className="bottom-[40%] right-[5%] w-14 h-14 rounded-full bg-white/8"
-        delay={1.8}
-        duration={11}
-      />
-      <FloatingShape
-        className="top-[8%] left-[45%] w-5 h-5 rounded-full bg-white/20"
-        delay={3}
-        duration={5}
-      />
+      <HeroVideoBackground />
 
       {/* ── content ── */}
       <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
-        {/* university badge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -168,35 +122,32 @@ export default function HeroSection() {
           </span>
         </motion.div>
 
-        {/* main heading */}
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.15 }}
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight drop-shadow-md"
         >
           {t('新纪元大学学院', 'New Era University College')}
         </motion.h1>
 
-        {/* typing line */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.35 }}
           className="mt-4 h-10 sm:h-12 flex items-center justify-center"
         >
-          <span className="text-lg sm:text-xl md:text-2xl font-semibold text-emerald-100">
+          <span className="text-lg sm:text-xl md:text-2xl font-semibold text-white drop-shadow">
             {typed}
             <span className="inline-block w-0.5 h-6 sm:h-7 bg-white/80 ml-1 animate-pulse" />
           </span>
         </motion.div>
 
-        {/* tagline */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="mt-6 text-base sm:text-lg text-emerald-100/90 font-medium"
+          className="mt-6 text-base sm:text-lg text-white/90 font-medium drop-shadow"
         >
           {t(
             '30+ 课程 · 荣誉学士 · 专业文凭 · 基础课程',
@@ -204,7 +155,6 @@ export default function HeroSection() {
           )}
         </motion.p>
 
-        {/* CTA buttons */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -234,7 +184,6 @@ export default function HeroSection() {
           </Button>
         </motion.div>
 
-        {/* scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

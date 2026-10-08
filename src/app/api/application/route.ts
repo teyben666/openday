@@ -14,6 +14,7 @@ const applicationSchema = z.object({
   programme: z.string().min(1),
   documents: z.string().optional(),
   proofPath: z.string().optional(),
+  proofCheck: z.string().optional(),
   fromDiscovery: z.boolean().optional(),
   discoveryProfile: z.string().optional(),
 });
@@ -30,6 +31,7 @@ export async function POST(request: NextRequest) {
 
     let gradesPayload: {
       qualification?: string;
+      cgpa?: number;
       subjects?: { subjectId?: string; subject?: string; grade?: string }[];
     };
     try {
@@ -50,7 +52,9 @@ export async function POST(request: NextRequest) {
       grade: s.grade || '',
     }));
 
-    const check = checkEntryEligibility(data.programme, qualification, rows);
+    const check = checkEntryEligibility(data.programme, qualification, rows, {
+      cgpa: typeof gradesPayload.cgpa === 'number' ? gradesPayload.cgpa : null,
+    });
     if (!check.ok) {
       return NextResponse.json(
         { success: false, error: 'Entry requirements not met', check },
@@ -68,6 +72,7 @@ export async function POST(request: NextRequest) {
         programme: data.programme,
         documentNotes: data.documents || null,
         proofPath: data.proofPath || null,
+        proofCheck: data.proofCheck || null,
         fromDiscovery: data.fromDiscovery ?? false,
         discoveryProfile: data.discoveryProfile || null,
       },

@@ -1,7 +1,5 @@
 'use client';
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/store/use-language';
 import { GraduationCap, DollarSign, BookOpen, Briefcase, Compass, Languages } from 'lucide-react';
@@ -57,42 +55,30 @@ const features = [
   },
 ];
 
-const fields = [
-  { emoji: '💻', zh: 'IT', en: 'IT', filter: 'tech' },
-  { emoji: '💼', zh: '商业', en: 'Business', filter: 'business' },
-  { emoji: '🎨', zh: '设计', en: 'Design', filter: 'design' },
-  { emoji: '🎬', zh: '媒体', en: 'Media', filter: 'media' },
-  { emoji: '🧠', zh: '心理', en: 'Psychology', filter: 'counselling' },
-  { emoji: '📚', zh: '语言', en: 'Language', filter: 'chinese' },
-  { emoji: '👶', zh: '教育', en: 'Education', filter: 'education' },
-  { emoji: '💰', zh: '金融', en: 'Finance', filter: 'finance' },
-];
-
 export function WhyChooseUs() {
   const { lang, t } = useLanguage();
-  const router = useRouter();
 
   return (
-    <section id="why-choose-us" className="py-16 sm:py-24 bg-gray-50 dark:bg-gray-900/50">
-      <div className="max-w-7xl mx-auto px-4 md:px-8">
+    <section id="why-choose-us" className="py-16 sm:py-24">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="mb-12 text-center"
         >
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-gray-100">
+          <h2 className="text-2xl font-extrabold text-white drop-shadow-sm sm:text-3xl">
             {t('为什么选择新纪元？', 'Why Choose NEUC?')}
           </h2>
-          <p className="mt-3 text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="mx-auto mt-3 max-w-2xl text-white drop-shadow-sm">
             {t(
               '我们不只是列出课程 — 我们帮助你发现自己、了解课程、做出更好的升学决定',
-              'We don\'t just list programmes — we help you discover yourself and make better decisions',
+              "We don't just list programmes — we help you discover yourself and make better decisions",
             )}
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-14">
+        <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
           {features.map((f, i) => (
             <motion.div
               key={f.title.en}
@@ -100,44 +86,20 @@ export function WhyChooseUs() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
-              className="rounded-2xl bg-white dark:bg-gray-900 p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow"
+              className="glass-panel glass-panel-hover rounded-[1.35rem] p-6"
             >
-              <div className="h-11 w-11 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center mb-4">
-                <f.icon className="h-5 w-5 text-emerald-600" />
+              <div className="glass-icon mb-4 flex h-11 w-11 items-center justify-center rounded-2xl">
+                <f.icon className="h-5 w-5 text-emerald-400" />
               </div>
-              <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-2">
+              <h3 className="mb-2 font-bold text-white">
                 {lang === 'zh' ? f.title.zh : f.title.en}
               </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+              <p className="text-sm leading-relaxed text-white">
                 {lang === 'zh' ? f.desc.zh : f.desc.en}
               </p>
             </motion.div>
           ))}
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center"
-        >
-          <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
-            {t('按领域探索课程', 'Explore by Field')}
-          </h3>
-          <div className="flex flex-wrap justify-center gap-3">
-            {fields.map((field) => (
-              <button
-                key={field.filter}
-                type="button"
-                onClick={() => router.push(`/courses?category=${field.filter}`)}
-                className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-colors cursor-pointer"
-              >
-                <span>{field.emoji}</span>
-                {lang === 'zh' ? field.zh : field.en}
-              </button>
-            ))}
-          </div>
-        </motion.div>
       </div>
     </section>
   );

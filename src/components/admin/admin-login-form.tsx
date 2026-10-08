@@ -28,7 +28,7 @@ export function AdminLoginForm() {
         setError('Password incorrect');
         return;
       }
-      router.push('/admin');
+      router.push('/admin/find');
       router.refresh();
     } catch {
       setError('Login failed');
@@ -45,7 +45,9 @@ export function AdminLoginForm() {
             <Lock className="h-5 w-5" />
             Admin Login
           </CardTitle>
-          <CardDescription>Enter the admin password to view leads and applications.</CardDescription>
+          <CardDescription>
+            Open Day staff login — find students by phone or name after signing in.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={onSubmit} className="space-y-4">

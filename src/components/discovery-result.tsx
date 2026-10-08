@@ -11,7 +11,7 @@ import type { DiscoveryResult, CourseRecommendation } from '@/lib/course-matchin
 import type { Course } from '@/data/courses';
 import { useLanguage } from '@/store/use-language';
 import { useComparison } from '@/store/use-comparison';
-import { useDiscovery, useShortlist } from '@/store/use-discovery';
+import { useDiscovery } from '@/store/use-discovery';
 import { useCourseUi } from '@/components/site-layout';
 import { buildWhatsAppUrl, buildGeneralWhatsAppMessage } from '@/lib/contact';
 import {
@@ -20,7 +20,6 @@ import {
   Eye,
   CheckCircle2,
   MessageCircle,
-  Bookmark,
   Pencil,
   Compass,
 } from 'lucide-react';
@@ -74,7 +73,6 @@ function RecCard({ rec, onViewDetail, onCompare }: {
   onCompare: (c: Course) => void;
 }) {
   const { lang, t } = useLanguage();
-  const { toggle: toggleShortlist, isInShortlist } = useShortlist();
   const { course, tier, reasons, level } = rec;
   const tierInfo = tierLabels[tier];
 
@@ -103,10 +101,6 @@ function RecCard({ rec, onViewDetail, onCompare }: {
           </Button>
           <Button size="sm" variant="outline" onClick={() => onCompare(course)}>
             <GitCompareArrows className="h-3.5 w-3.5 mr-1" />{t('对比', 'Compare')}
-          </Button>
-          <Button size="sm" variant={isInShortlist(course.id) ? 'default' : 'outline'} onClick={() => toggleShortlist(course.id)}>
-            <Bookmark className="h-3.5 w-3.5 mr-1" />
-            {isInShortlist(course.id) ? t('已收藏', 'Saved') : t('收藏', 'Save')}
           </Button>
         </div>
       </CardContent>

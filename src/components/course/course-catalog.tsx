@@ -27,13 +27,14 @@ import { useComparison } from '@/store/use-comparison';
 import CourseCard from '@/components/course/course-card';
 import { useCourseUi } from '@/components/site-layout';
 import type { Course, CourseType } from '@/data/courses';
+import { facultySort } from '@/data/faculties';
 
 interface CourseCatalogProps {
   initialCategoryFilter?: string | null;
   onCategoryFilterConsumed?: () => void;
 }
 
-type SortKey = 'tuition-asc' | 'tuition-desc' | 'duration-asc' | 'duration-desc' | 'name';
+type SortKey = 'faculty' | 'tuition-asc' | 'tuition-desc' | 'duration-asc' | 'duration-desc' | 'name';
 
 const TUITION_RANGES = [
   { label: { zh: '全部学费', en: 'All Tuition' }, value: 'all' },
@@ -67,7 +68,7 @@ export default function CourseCatalog({
   const [departmentFilter, setDepartmentFilter] = useState<string>('all');
   const [durationFilter, setDurationFilter] = useState<string>('all');
   const [tuitionFilter, setTuitionFilter] = useState<string>('all');
-  const [sortKey, setSortKey] = useState<SortKey>('name');
+  const [sortKey, setSortKey] = useState<SortKey>('faculty');
   const [filterSheetOpen, setFilterSheetOpen] = useState(false);
 
   useEffect(() => {
@@ -142,6 +143,9 @@ export default function CourseCatalog({
 
     // Sort
     switch (sortKey) {
+      case 'faculty':
+        result.sort(facultySort);
+        break;
       case 'tuition-asc':
         result.sort((a, b) => a.tuition - b.tuition);
         break;
@@ -168,7 +172,7 @@ export default function CourseCatalog({
     setDepartmentFilter('all');
     setDurationFilter('all');
     setTuitionFilter('all');
-    setSortKey('name');
+    setSortKey('faculty');
   };
 
   const hasActiveFilters =
@@ -277,6 +281,7 @@ export default function CourseCatalog({
             <SelectValue placeholder={t('排序方式', 'Sort By')} />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="faculty">{t('学院', 'Faculty')}</SelectItem>
             <SelectItem value="name">{t('名称', 'Name')}</SelectItem>
             <SelectItem value="tuition-asc">
               {t('学费：低 → 高', 'Tuition: Low → High')}
@@ -304,7 +309,7 @@ export default function CourseCatalog({
   );
 
   return (
-    <section id="catalog-section" className="relative">
+    <section id="catalog-section" className="relative px-4 md:px-8 max-w-7xl mx-auto">
       {/* Desktop filter bar */}
       <div className="mb-6 hidden gap-4 md:grid md:grid-cols-12 md:items-end">
         {/* Search - spans 4 cols */}
@@ -392,7 +397,8 @@ export default function CourseCatalog({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="name">{t('名称', 'Name')}</SelectItem>
+              <SelectItem value="faculty">{t('学院', 'Faculty')}</SelectItem>
+            <SelectItem value="name">{t('名称', 'Name')}</SelectItem>
               <SelectItem value="tuition-asc">{t('学费↑', 'Fee ↑')}</SelectItem>
               <SelectItem value="tuition-desc">{t('学费↓', 'Fee ↓')}</SelectItem>
               <SelectItem value="duration-asc">{t('学制↑', 'Dur ↑')}</SelectItem>
@@ -495,7 +501,7 @@ export default function CourseCatalog({
 
       {/* Results grid */}
       {filtered.length > 0 ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           <AnimatePresence mode="popLayout">
             {filtered.map((course) => (
               <CourseCard
